@@ -7,47 +7,70 @@ import { useState } from "react";
 export function Donador_CategoriasPage() {
     const navigate = useNavigate();
     const [refresh, setRefresh] = useState(Date.now())
-
+    const [hideForm, setHideForm] = useState(true);
+    const [updateData, setUpdateData] = useState({});
+    const [updateId, setUpdateId] = useState<any>(null);
+    const ENDPOINT = API.CATEGORIAS;
+    const deleteConfirm = 'Desea ELIMINAR la categoria? cualquier registro que la utilice tambien sera eliminado.';
+    const deleteMsg = 'Categoria eliminada';
+    const postMsg = 'Categoria agregada';
+    const putMsg = 'Categoria modificada';
     function detalles(id:string){
         alert("Detalladeras: " + id)
-            API.getDetail(API.CATEGORIAS, id).then(result => {
+            API.getDetail(ENDPOINT, id).then(result => {
 
             })
     }
-    function editar(id:string){
-        alert("Modificaderas: " + id)
-            API.getDetail(API.CATEGORIAS, id).then(result => {
-
-                setRefresh(Date.now());
-            })
+    function setModal(id:string){
+        API.getDetail(ENDPOINT, id).then(result=>{
+            if(result.error){
+                alert('Error del servidor: ' + result.error);
+                return;
+            }
+            setUpdateData(result);
+            setHideForm(false);
+            setUpdateId(id);
+        })
     }
     function eliminar(id:string){
-        confirm('Desea ELIMINAR el registro? cualquier registro que lo utilice tambien sera eliminado.') ?
-                API.delete(API.CATEGORIAS, id).then((res) => {
+        confirm(deleteConfirm) ?
+                API.delete(ENDPOINT, id).then((res) => {
                     if (res && res.error) alert(res.error)
                     else {
-                        alert("Registro eliminado")
+                        alert(deleteMsg)
                         setRefresh(Date.now())
                     }
                 }) : -1;
     }
     function agregar(data:{[x:string]:any}){
         
-        API.post(API.CATEGORIAS, data).then(msg=>{
+        API.post(ENDPOINT, data).then(msg=>{
             if(msg.error){
                 alert("Error del servidor: " + msg.error);
                 return;
             }
-            alert('Categoria AGREGADA');
+            alert(postMsg);
+            setRefresh(Date.now());
+        })
+    }
+    function actualizar(data:{[x:string]:any}){
+        if(updateId == null) return;
+        API.update(ENDPOINT, updateId, data).then(msg=>{
+            if(msg.error){
+                alert('Error del servidor: ' + msg.error);
+                return;
+            }
+            alert(putMsg);
             setRefresh(Date.now());
         })
     }
     return (
         <div>
-            <Donador_CategoriaForm onSubmit={agregar}/>
+            <Donador_CategoriaForm onSubmit={agregar} autofill={{}}/>
+            <Donador_CategoriaForm onSubmit={actualizar} autofill={updateData} hidden={hideForm}/>
             <hr />
             <Tabler target={API.CATEGORIAS} columns={['nombre']} columNames={['Nombre']} primaryField="id" refresh={refresh}
-                onDelete={eliminar} onDetail={detalles} onEdit={editar} />
+                onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
         </div>
         
     );

@@ -1,5 +1,6 @@
 import { useForm, type RegisterOptions } from 'react-hook-form';
 import printErrors from './printErrors';
+import { useEffect } from 'react';
 
 const validation:{[x:string]:RegisterOptions} = {
     nombre:{
@@ -9,15 +10,19 @@ const validation:{[x:string]:RegisterOptions} = {
     }
 }
 
-function Donador_CategoriaForm({ onSubmit }: { onSubmit: (data: { [x: string]: any }) => any }) {
-    const { register, handleSubmit, formState: { errors }, setValue, setValues, setError } = useForm({criteriaMode:'all'});
+function Donador_CategoriaForm({ onSubmit, autofill, hidden=false }: { onSubmit: (data: { [x: string]: any }) => any, autofill:{[x:string]:any}, hidden?:boolean }) {
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({criteriaMode:'all'});
     const submit = handleSubmit(
-        data => {
-            onSubmit(data);
-        },
+        data => { onSubmit(data); },
     )
+    useEffect(()=>{
+        if(autofill.id) delete autofill.id;
+        for(const field in autofill){
+            setValue(field, autofill[field])
+        }
+    }, [autofill])
     return (
-        <form onSubmit={submit}>
+        <form onSubmit={submit} hidden={hidden}>
             <label htmlFor="nombre">Nombre: </label>
             <input type="text" id='nombre' {...register("nombre", validation['nombre'])} />
             {errors.nombre && errors.nombre.types && printErrors(errors.nombre)}

@@ -73,12 +73,14 @@ class API {
     static async getDetail(url:string, idValue:any){
         let urlFinal = this.getUrl(url)+idValue+'/';
         let res = await fetch(urlFinal, {method:'GET'})
-        return await res.text();
+        if(!res.ok) return {error: await res.text()}
+        return await res.json();
     }
     static async update(url:string, idValue:any, body:{}){
         let urlFinal = this.getUrl(url)+idValue+'/';
-        let res = await fetch(urlFinal, {method:'UPDATE', body:JSON.stringify(body)})
-        return await res.json();
+        let res = await fetch(urlFinal, {method:'PUT', body:JSON.stringify(body), headers:{'Content-Type':'application/json'}})
+        if(!res.ok) return {'error': await res.text()}
+        return {message: await res.text()};
     }
 }
 API.init()
