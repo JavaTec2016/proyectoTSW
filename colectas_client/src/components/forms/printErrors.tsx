@@ -1,0 +1,14 @@
+import type { ErrorOption } from "react-hook-form";
+
+function printErrors(error:ErrorOption){
+    console.log(error)
+    return (
+        <div>
+        {Object.keys(error.types!).map(type=>(
+            <p>{error.types![type]}</p>
+        ))}
+        </div>
+    );
+}
+
+export default printErrors;

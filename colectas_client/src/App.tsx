@@ -1,13 +1,14 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Donador_CategoriasPage } from './pages/Donador_CategoriasPage'
-import { Donador_CategoriasFormPage } from './pages/Donador_CategoriasFormPage'
+import { Navigation } from './components/Navigation'
 function App() {
   return (
     <BrowserRouter>
+      <Navigation />
       <Routes>
+        
         <Route path='/categorias' element={<Donador_CategoriasPage/>} />
-        <Route path='/categorias/crear' element={<Donador_CategoriasFormPage/>} />
       </Routes>
     </BrowserRouter>
   )
