@@ -9,7 +9,6 @@ function TableBodier({data, columns, primaryField, onDetail, onEdit, onDelete}:{
   return (
     <tbody>
         {data?.map((row, index)=>{
-          console.log('row para ID: ', row[primaryField], row)
           return (
             <TableRow key={index}
               dataRow={row}

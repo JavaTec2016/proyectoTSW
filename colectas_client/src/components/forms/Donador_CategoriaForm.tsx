@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useForm, type MultipleFieldErrors, type RegisterOptions } from 'react-hook-form';
+import { useForm, type RegisterOptions } from 'react-hook-form';
 import printErrors from './printErrors';
 
 const validation:{[x:string]:RegisterOptions} = {

@@ -27,7 +27,7 @@ export function Donador_CategoriasPage() {
                     if (res && res.error) alert(res.error)
                     else {
                         alert("Registro eliminado")
-                        document.getElementById(id)?.remove();
+                        setRefresh(Date.now())
                     }
                 }) : -1;
     }
