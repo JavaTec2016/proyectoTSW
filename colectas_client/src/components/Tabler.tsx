@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../api/api";
 import TableHeader from "./TableHeader";
 import TableBodier from "./TableBodier";
+import { Table } from "react-bootstrap";
 export function Tabler({target, columns, columNames, primaryField, refresh, onDetail, onEdit, onDelete}:{target: string, columns: string[], columNames: string[], primaryField: string, refresh:number, onDetail: (id: string) => any, onEdit: (id: string) => any, onDelete: (id: string) => any}) {
     const [listing, setListing] = useState<[{ [x in string]: any }]>()
     async function load() {
@@ -13,7 +14,7 @@ export function Tabler({target, columns, columNames, primaryField, refresh, onDe
         load()
     }, [refresh])
     return (
-        <table>
+        <Table striped bordered hover responsive className="rounded-2 shadow w-100">
             <TableHeader fields={columns} fieldNames={columNames} />
             <TableBodier
                 data={listing}
@@ -21,6 +22,6 @@ export function Tabler({target, columns, columNames, primaryField, refresh, onDe
                 primaryField={primaryField}
                 onDetail={onDetail} onEdit={onEdit} onDelete={onDelete}
             />
-        </table>
+        </Table>
     )
 }

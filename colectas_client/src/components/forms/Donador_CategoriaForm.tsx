@@ -1,6 +1,7 @@
 import { useForm, type RegisterOptions } from 'react-hook-form';
 import printErrors from './printErrors';
 import { useEffect } from 'react';
+import { Button, Form, FormControl, FormLabel } from 'react-bootstrap';
 
 const validation:{[x:string]:RegisterOptions} = {
     nombre:{
@@ -22,12 +23,20 @@ function Donador_CategoriaForm({ onSubmit, autofill, hidden=false }: { onSubmit:
         }
     }, [autofill])
     return (
-        <form onSubmit={submit} hidden={hidden}>
-            <label htmlFor="nombre">Nombre: </label>
-            <input type="text" id='nombre' {...register("nombre", validation['nombre'])} />
+        <Form onSubmit={submit} hidden={hidden} className='card rounded-3'>
+            <div className='card-header'>
+                <h5 className='m-0'>Datos de la categoria</h5>
+            </div>
+            <div className='card-body'>
+                <FormLabel htmlFor="nombre">Nombre: </FormLabel>
+            <FormControl type="text" id='nombre' {...register("nombre", validation['nombre'])} />
             {errors.nombre && errors.nombre.types && printErrors(errors.nombre)}
-            <input type="submit" value="Enviar" />
-        </form>
+            </div>
+            <div className='card-footer align-items-center'>
+                <Button className='btn btn-primary my-2' type="submit">Enviar</Button>
+            </div>
+            
+        </Form>
     )
 }
 

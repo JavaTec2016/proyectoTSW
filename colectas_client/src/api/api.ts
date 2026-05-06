@@ -6,7 +6,7 @@ class API {
 
     //direccion
 
-    static ROOT = 'http://localhost:8000'
+    static ROOT = 'http://localhost:8001'
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     

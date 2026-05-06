@@ -3,7 +3,8 @@ import API from "../api/api";
 import Donador_CategoriaForm from "../components/forms/Donador_CategoriaForm";
 import { Tabler } from "../components/Tabler";
 import { useState } from "react";
-
+import { toast } from 'react-hot-toast';
+import { Col, Row } from "react-bootstrap";
 export function Donador_CategoriasPage() {
     const navigate = useNavigate();
     const [refresh, setRefresh] = useState(Date.now())
@@ -15,6 +16,7 @@ export function Donador_CategoriasPage() {
     const deleteMsg = 'Categoria eliminada';
     const postMsg = 'Categoria agregada';
     const putMsg = 'Categoria modificada';
+    const serverErrorMsg = 'Error del servidor, intentelo mas tarde';
     function detalles(id:string){
         alert("Detalladeras: " + id)
             API.getDetail(ENDPOINT, id).then(result => {
@@ -24,7 +26,8 @@ export function Donador_CategoriasPage() {
     function setModal(id:string){
         API.getDetail(ENDPOINT, id).then(result=>{
             if(result.error){
-                alert('Error del servidor: ' + result.error);
+                toast.error(serverErrorMsg);
+                console.error(result.error);
                 return;
             }
             setUpdateData(result);
@@ -35,9 +38,12 @@ export function Donador_CategoriasPage() {
     function eliminar(id:string){
         confirm(deleteConfirm) ?
                 API.delete(ENDPOINT, id).then((res) => {
-                    if (res && res.error) alert(res.error)
+                    if (res && res.error){
+                        toast.error(serverErrorMsg);
+                        console.error(res.error);
+                    }
                     else {
-                        alert(deleteMsg)
+                        toast.success(deleteMsg)
                         setRefresh(Date.now())
                     }
                 }) : -1;
@@ -46,10 +52,11 @@ export function Donador_CategoriasPage() {
         
         API.post(ENDPOINT, data).then(msg=>{
             if(msg.error){
-                alert("Error del servidor: " + msg.error);
+                toast.error(serverErrorMsg);
+                console.error(msg.error);
                 return;
             }
-            alert(postMsg);
+            toast.success(postMsg)
             setRefresh(Date.now());
         })
     }
@@ -57,20 +64,27 @@ export function Donador_CategoriasPage() {
         if(updateId == null) return;
         API.update(ENDPOINT, updateId, data).then(msg=>{
             if(msg.error){
-                alert('Error del servidor: ' + msg.error);
+                toast.error(serverErrorMsg);
+                console.error(msg.error);
                 return;
             }
-            alert(putMsg);
+            toast.success(putMsg)
             setRefresh(Date.now());
         })
     }
     return (
-        <div>
-            <Donador_CategoriaForm onSubmit={agregar} autofill={{}}/>
-            <Donador_CategoriaForm onSubmit={actualizar} autofill={updateData} hidden={hideForm}/>
-            <hr />
-            <Tabler target={API.CATEGORIAS} columns={['nombre']} columNames={['Nombre']} primaryField="id" refresh={refresh}
+        <div className="container-fluid d-flex mx-a p-0">
+            <Row className="w-100">
+                <Col md='4'>
+                    <Donador_CategoriaForm onSubmit={agregar} autofill={{}}/>
+                </Col>
+                <Col md='8'>
+                <Tabler target={API.CATEGORIAS} columns={['nombre']} columNames={['Nombre']} primaryField="id" refresh={refresh}
                 onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
+                </Col>
+            
+            </Row>
+            <Donador_CategoriaForm onSubmit={actualizar} autofill={updateData} hidden={hideForm}/>
         </div>
         
     );
