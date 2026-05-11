@@ -18,6 +18,9 @@ export function Donador_CategoriasPage() {
     const postMsg = 'Categoria agregada';
     const putMsg = 'Categoria modificada';
     const serverErrorMsg = 'Error del servidor, intentelo mas tarde';
+    function refreshTable(){
+        setRefresh(Date.now());
+    }
     function detalles(id: string) {
         alert("Detalladeras: " + id)
         API.getDetail(ENDPOINT, id).then(result => {
@@ -45,7 +48,7 @@ export function Donador_CategoriasPage() {
                 }
                 else {
                     toast.success(deleteMsg)
-                    setRefresh(Date.now())
+                    refreshTable();
                 }
             }) : -1;
     }
@@ -58,7 +61,7 @@ export function Donador_CategoriasPage() {
                 return;
             }
             toast.success(postMsg)
-            setRefresh(Date.now());
+            refreshTable();
         })
     }
     function actualizar(data: { [x: string]: any }) {
@@ -70,11 +73,17 @@ export function Donador_CategoriasPage() {
                 return;
             }
             toast.success(putMsg)
-            setRefresh(Date.now());
+            refreshTable();
         })
     }
+    function autoSearch(data:{[x:string]:any}){
+        
+    }
+    async function getRegistros(filtros: { [x: string]: any }){
+        const regs = await API.get(ENDPOINT, filtros);
+    }
     return (
-        <div className="page-container">
+        <div className="app-shell">
 
             <Navigation />
             <Breadcrumb path="/categorias" />
@@ -100,8 +109,9 @@ export function Donador_CategoriasPage() {
                         </div>
 
                     </div>
+                    <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
                 </div>
-                <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
+                
             </main>
         </div>
     );

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'coreapi',
     'colectas',
+    'django_filters',
     'drf_spectacular',
     
 ]
@@ -140,6 +141,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Colectas API',
