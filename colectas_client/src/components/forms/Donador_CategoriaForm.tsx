@@ -3,39 +3,54 @@ import printErrors from './printErrors';
 import { useEffect } from 'react';
 import { Button, Form, FormControl, FormLabel } from 'react-bootstrap';
 
-const validation:{[x:string]:RegisterOptions} = {
-    nombre:{
+const validation: { [x: string]: RegisterOptions } = {
+    nombre: {
         required: 'Campo requerido',
-        maxLength: {value: 50, message:'No puede superar 50 caracteres'},
-        pattern: {value: /^[A-Za-z ]+$/, message: 'No se permiten numeros o caracteres espeiales'},    
+        maxLength: { value: 50, message: 'No puede superar 50 caracteres' },
+        pattern: { value: /^[A-Za-z ]+$/, message: 'No se permiten numeros o caracteres espeiales' },
     }
 }
 
-function Donador_CategoriaForm({ onSubmit, autofill, hidden=false }: { onSubmit: (data: { [x: string]: any }) => any, autofill:{[x:string]:any}, hidden?:boolean }) {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm({criteriaMode:'all'});
+function Donador_CategoriaForm({ id, onSubmit, autofill, hidden = false }: { id:string, onSubmit: (data: { [x: string]: any }) => any, autofill: { [x: string]: any }, hidden?: boolean }) {
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({ criteriaMode: 'all' });
     const submit = handleSubmit(
         data => { onSubmit(data); },
     )
-    useEffect(()=>{
-        if(autofill.id) delete autofill.id;
-        for(const field in autofill){
+    useEffect(() => {
+        if (autofill.id) delete autofill.id;
+        for (const field in autofill) {
             setValue(field, autofill[field])
         }
     }, [autofill])
+
+    function limpiar(){
+        const form = new FormData(document.getElementById(id)! as HTMLFormElement);
+        form.forEach((entry, key)=>{
+            let inp = document.getElementById(key)!;
+            inp instanceof HTMLInputElement || inp instanceof HTMLSelectElement ? inp.value = '' : -1;
+        })
+    }
+
     return (
-        <Form onSubmit={submit} hidden={hidden} className='card rounded-3'>
-            <div className='card-header'>
-                <h5 className='m-0'>Datos de la categoria</h5>
+        <Form onSubmit={submit} hidden={hidden} className='form-panel' id={id}>
+
+            <div className='panel-header'>
+                <p className='panel-title'>Informacion de la categoria</p>
+                <p className='panel-subtitle'>Altas y búsqueda</p>
             </div>
-            <div className='card-body'>
-                <FormLabel htmlFor="nombre">Nombre: </FormLabel>
-            <FormControl type="text" id='nombre' {...register("nombre", validation['nombre'])} />
-            {errors.nombre && errors.nombre.types && printErrors(errors.nombre)}
-            </div>
-            <div className='card-footer align-items-center'>
-                <Button className='btn btn-primary my-2' type="submit">Enviar</Button>
+
+            <div className='panel-divider'></div>
+
+            <div className='form-row'>
+                <div className='form-group'>
+                    <FormLabel htmlFor="nombre">Nombre: </FormLabel>
+                    <FormControl type="text" id='nombre' {...register("nombre", validation['nombre'])} />
+                    {errors.nombre && errors.nombre.types && printErrors(errors.nombre)}
+                </div>
             </div>
             
+             <input type='submit' className="btn-primary-custom" value="Guardar registro"></input>
+            <button className="btn-secondary-custom" onClick={()=>limpiar()}>Limpiar campos</button>
         </Form>
     )
 }
