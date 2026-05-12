@@ -8,11 +8,14 @@ function Donador_CategoriaForm({ id, onSubmit, autofill, hidden = false, onchang
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({ criteriaMode: 'all' });
 
   const validation: { [x: string]: RegisterOptions } = {}
-  validation[id + '_nombre'] = {
-    required: 'Campo requerido',
-    maxLength: { value: 50, message: 'No puede superar 50 caracteres' },
-    pattern: { value: /^[A-Za-z ]+$/, message: 'No se permiten numeros o caracteres espeiales' },
-  }
+  validation[inputName(id, "nombre")] = {
+    required: "Campo requerido",
+    maxLength: { value: 50, message: "No puede superar 50 caracteres" },
+    pattern: {
+      value: /^[A-Za-z ]+$/,
+      message: "No se permiten numeros o caracteres espeiales",
+    },
+  };
 
   const submit = handleSubmit(data => {
     const cleared = clearPrefix(data);

@@ -2,7 +2,6 @@ import django_filters
 
 from colectas.models import *
 
-
 class CorporacionFilter(django_filters.FilterSet):
     id = django_filters.NumberFilter(lookup_expr='icontains')
     nombre = django_filters.CharFilter(lookup_expr='icontains')
@@ -12,9 +11,13 @@ class CorporacionFilter(django_filters.FilterSet):
 
     class Meta:
         model = Corporacion
-        fields = {
-            'id': ['icontains']
-        }
+        fields = [
+            'id',
+            'nombre',
+            'direccion',
+            'telefono',
+            'email',
+        ]
 
 class Donador_CategoriaFilter(django_filters.FilterSet):
     id = django_filters.NumberFilter(lookup_expr='icontains')
