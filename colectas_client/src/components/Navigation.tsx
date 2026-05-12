@@ -1,25 +1,18 @@
-import React from 'react'
-import { Navbar } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Nav, Navbar } from "react-bootstrap";
 
 export function Navigation() {
   return (
-    <nav className="navbar app-navbar navbar-expand-lg">
+    <Navbar expand="md" sticky="top" className="navbar app-navbar">
       <div className="container-fluid">
-        <a className="navbar-brand navbar-text" href="/">Colectas</a>
-        <div className='navbar-divider'></div>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav navbar-links">
-            <li className="nav-item">
-              <a className="nav-link" aria-current="page" href="#">Inicio</a>
-            </li>
-        
-          </ul>
-        </div>
+        <Navbar.Brand className="navbar-text" href="/">Colectas</Navbar.Brand>
+        <div className="navbar-divider"></div>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="#top">Inicio</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </div>
-    </nav>
+    </Navbar>
   )
 }
