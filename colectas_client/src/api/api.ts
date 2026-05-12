@@ -57,7 +57,7 @@ class API {
      * @param url url
      * @param params parametros
      */
-    static async get(url:string, params:{} | null){
+    static async get(url:string, params:{} | null):Promise<{[x:string]:any}[]>{
         let urlFinal = this.getUrl(url, params);
         let res = await fetch(urlFinal, { method:'GET'})
         return await res.json();

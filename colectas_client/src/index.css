@@ -35,7 +35,7 @@
       display: flex;
       flex-direction: column;
       height: 100vh !important;
-      overflow: hidden !important;
+      
     }
  
     /* ── Navbar ───────────────────────────────── */
@@ -155,17 +155,18 @@
     /* ── Page content ─────────────────────────── */
     .page-content {
       flex: 1;
-      overflow: hidden !important;
       padding: 1.25rem 1.5rem;
     }
     .content-row {
       display: flex;
       gap: 1.25rem;
-      height: 100% !important;
       align-items: flex-start;
     }
- 
+    
     /* ── Form panel ───────────────────────────── */
+    .form-scroll {
+      overflow-y: auto;
+    }
     .form-panel {
       flex: 0 0 calc(33.333% - 0.625rem);
       background: var(--bg-surface);
@@ -175,8 +176,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      max-height: 100%;
-      overflow-y: auto;
+      max-height: 70vh;
     }
     .panel-header {
       margin-bottom: 1.25rem;
@@ -197,7 +197,11 @@
       background: var(--border);
       margin: 0 -1.25rem 1.25rem;
     }
- 
+    .panel-close {
+      border: transparent;
+      background-color: transparent;
+      font-weight: bolder;
+    }
     .form-group { margin-bottom: 1rem; }
     .form-group label {
       display: block;
@@ -279,7 +283,8 @@
       border-radius: 10px;
       display: flex;
       flex-direction: column;
-      max-height: 100% !important;
+      max-height: 80vh !important;
+      overflow: hidden;
       min-width: 0;
     }
     .table-panel-header {

@@ -9,8 +9,8 @@ export function Tabler({data, columns, columNames, primaryField, refresh, onDeta
         console.log(data)
     }
     useEffect(() => {
-        load()
-    }, [refresh])
+        load();
+    }, [data])
     return (
         <table className="data-table">
             <TableHeader fields={columns} fieldNames={columNames} />
