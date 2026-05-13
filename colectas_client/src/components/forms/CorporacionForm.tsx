@@ -38,9 +38,11 @@ function CorporacionForm({
         },
     };
     validation[inputName(id, "direccion")] = {
+        required: "Campo requerido",
         maxLength: { value: 100, message: "No puede superar 100 caracteres" },
     };
     validation[inputName(id, "telefono")] = {
+        required: "Campo requerido",
         maxLength: { value: 10, message: "No puede superar 10 dígitos" },
         minLength: {value:10, message:"Debe ser menor a 10 dígitos"},
         pattern: {
@@ -49,6 +51,7 @@ function CorporacionForm({
         },
     };
     validation[inputName(id, "email")] = {
+        required: "Campo requerido",
         maxLength: { value: 100, message: "No puede superar 100 caracteres" },
         pattern: {
             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,

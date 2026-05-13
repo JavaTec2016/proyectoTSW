@@ -7,6 +7,7 @@ import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
+import { Nav } from "react-bootstrap";
 
 
 export function CorporacionesPage() {
@@ -106,7 +107,9 @@ export function CorporacionesPage() {
     return (
         <div className="app-shell">
 
-            <Navigation />
+            <Navigation>
+                <Nav.Link href="#top">Inicio</Nav.Link>
+            </Navigation>
             <Breadcrumb path="/colectas/corporaciones" />
 
             <main className="page-content">
@@ -133,11 +136,8 @@ export function CorporacionesPage() {
                                 }} />
                             </div>
                         </div>
-
-                        <div className="table-scroll">
-                            <Tabler data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id" refresh={refresh}
-                                onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
-                        </div>
+                        <Tabler data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
+                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
 
                     </div>
                     <CorporacionForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />

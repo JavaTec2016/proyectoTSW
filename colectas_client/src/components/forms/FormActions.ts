@@ -25,3 +25,10 @@ export function extraer(form:HTMLFormElement){
 export function inputName(formId:string, inputId:string){
   return formId+ID_SPLIT+inputId;
 }
+export function makeDatatableColumns(...cols:string[]){
+  const columns:{[x:string]:string}[] = [];
+  cols.forEach(col=>{
+    columns.push({data:col})
+  })
+  return columns;
+}

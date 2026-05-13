@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react"
 import TableRow from "./TableRow"
+import { flexRender, type Row } from "@tanstack/react-table"
 
-function TableBodier({data, columns, primaryField, onDetail, onEdit, onDelete}:{data:{[x in string]:any}[] | undefined, columns:string[], primaryField:string, onDetail:(id:string)=>{}, onEdit:(id:string)=>{}, onDelete:(id:string)=>{}}) {
-  const [render, setRender] = useState(false);
-  useEffect(()=>{
-    setRender(prev=> !prev)
-  }, [data])
+function TableBodier({data}:{data:Row<{[x:string]:any}>[]}) {
+  
   return (
     <tbody>
-        {data?.map((row, index)=>{
-          return (
-            <TableRow key={index}
-              dataRow={row}
-              primaryField={primaryField}
-              columns={columns}
-              onDelete={onDelete} onDetail={onDetail} onEdit={onEdit}
-              />
+        {data.map(row=>{
+          
+          return(
+          <tr key={row.id}>
+            {row.getVisibleCells().map(cell=>{
+              console.log(cell.column.columnDef)
+              return(
+              <td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            )})}
+          </tr>
         )})}
     </tbody>
   )

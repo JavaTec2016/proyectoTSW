@@ -343,6 +343,7 @@
     .table-scroll {
       overflow-y: auto !important;
       flex: 1;
+      min-height: 0
     }
  
     .data-table {
@@ -416,6 +417,7 @@
     }
  
     .table-footer {
+      position: sticky;
       padding: 10px 16px;
       border-top: 1px solid var(--border);
       display: flex;

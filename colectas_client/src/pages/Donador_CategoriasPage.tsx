@@ -7,6 +7,7 @@ import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
+import { Nav } from "react-bootstrap";
 
 
 export function Donador_CategoriasPage() {
@@ -104,7 +105,9 @@ export function Donador_CategoriasPage() {
     return (
         <div className="app-shell">
 
-            <Navigation />
+            <Navigation>
+                <Nav.Link href="#top">Inicio</Nav.Link>
+            </Navigation>
             <Breadcrumb path="/categorias" />
 
             <main className="page-content">
@@ -132,12 +135,8 @@ export function Donador_CategoriasPage() {
                                 }} />
                             </div>
                         </div>
-
-                        <div className="table-scroll">
-                            <Tabler data={tableData} columns={['nombre']} columNames={['Nombre']} primaryField="id" refresh={refresh}
-                                onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
-                        </div>
-
+                         <Tabler data={tableData} columns={['nombre']} columNames={['Nombre']} primaryField="id"
+                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
                     </div>
                     <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
                 </div>
