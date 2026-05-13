@@ -102,6 +102,11 @@ export function CorporacionesPage() {
         });
 
     }
+    function ontoggle(state:boolean){
+        setToggleSearch(state);
+        if(!state) getRegistros();
+        else searchWith('agregarForm');
+    }
     useEffect(() => {
         getRegistros();
     }, [])
@@ -123,7 +128,7 @@ export function CorporacionesPage() {
                     }} />
 
                     <div className="table-panel">
-                        <Tabler data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
+                        <Tabler onSearchToggle={ontoggle} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
 
                     </div>

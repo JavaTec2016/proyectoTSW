@@ -63,7 +63,7 @@ export function Tabler({ data, columns, columNames, primaryField, onDetail, onEd
     return (
         //arriba iria el filtro pero yo no lo descargo pq ya lo tengo
         <>
-            <div className="table-panel-header justify-content-between">
+            <div className="table-panel-header justify-content-between align-items-center">
                 <div className="d-flex justify-content-center align-items-center form-group">
                     <p className="panel-title pe-2">{headerData.title}</p>
                     <label htmlFor="paginationSelect" className="w-100 px-4">Registros por página:{" "}</label>

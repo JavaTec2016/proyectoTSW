@@ -11,7 +11,6 @@ function TableBodier({data}:{data:Row<{[x:string]:any}>[]}) {
           return(
           <tr key={row.id}>
             {row.getVisibleCells().map(cell=>{
-              console.log(cell.column.columnDef)
               return(
               <td key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

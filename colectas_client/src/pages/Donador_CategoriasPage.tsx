@@ -103,6 +103,11 @@ export function Donador_CategoriasPage() {
         });
 
     }
+    function ontoggle(state:boolean){
+        setToggleSearch(state);
+        if(!state) getRegistros();
+        else searchWith('agregarForm');
+    }
     useEffect(() => {
         getRegistros();
     }, [])
@@ -124,7 +129,7 @@ export function Donador_CategoriasPage() {
                     }} />
 
                     <div className="table-panel">
-                         <Tabler onSearchToggle={(state)=>setToggleSearch(state)} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
+                         <Tabler onSearchToggle={ontoggle} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader}/>
                     </div>
                     <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
