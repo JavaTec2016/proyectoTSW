@@ -17,7 +17,7 @@ import TableHeader from "./TableHeader";
 import TableBodier from "./TableBodier";
 import { makeDatatableColumns } from "./forms/FormActions";
 import { makeColumns, type SlotConfigs } from "./TableActions";
-export function Tabler({ data, columns, columNames, primaryField, onDetail, onEdit, onDelete }: { data: { [x: string]: any }[], columns: string[], columNames: string[], primaryField: string, onDetail: (id: string) => any, onEdit: (id: string) => any, onDelete: (id: string) => any }) {
+export function Tabler({ data, columns, columNames, primaryField, onDetail, onEdit, onDelete, onSearchToggle=()=>{}, headerData }: { data: { [x: string]: any }[], columns: string[], columNames: string[], primaryField: string, onDetail: (id: string) => any, onEdit: (id: string) => any, onDelete: (id: string) => any, onSearchToggle?:(state:boolean)=>any, headerData:{title:string, subtitle:string} }) {
     const [listing, setListing] = useState<{ [x: string]: any }[]>([])
     const [sorting, setSorting] = useState<SortingState>([]);
     async function load() {
@@ -27,7 +27,7 @@ export function Tabler({ data, columns, columNames, primaryField, onDetail, onEd
     useEffect(() => {
         load();
     }, [data])
-
+    
     //config acciones
     const slotConfig: SlotConfigs = {};
     const sortings: { [x: number]: boolean } = {};
@@ -40,16 +40,6 @@ export function Tabler({ data, columns, columNames, primaryField, onDetail, onEd
     )
     sortings[columns.length] = false;
     const cols = makeColumns([...columns, 'acciones'], [...columNames, 'Acciones'], slotConfig, sortings);
-    console.log(cols)
-
-    let k =
-        [{
-            accessorKey: "nombre",
-            cell: undefined,
-            enableSorting: true,
-            header: "Nombre",
-        }]
-
     //tabla
     const table = useReactTable<{ [x: string]: any }>({
         data: listing!,
@@ -67,10 +57,34 @@ export function Tabler({ data, columns, columNames, primaryField, onDetail, onEd
     })
     const { pageIndex } = table.getState().pagination;
 
+    useEffect(()=>{
+    },[])
 
     return (
         //arriba iria el filtro pero yo no lo descargo pq ya lo tengo
         <>
+            <div className="table-panel-header justify-content-between">
+                <div className="d-flex justify-content-center align-items-center form-group">
+                    <p className="panel-title pe-2">{headerData.title}</p>
+                    <label htmlFor="paginationSelect" className="w-100 px-4">Registros por página:{" "}</label>
+                    <select className="form-control" name="paginationSelect" id="paginationSelect" onChange={(ev)=>{
+                        table.setPageSize(parseInt(ev.target.value))
+                    }}>
+                        <option value={5}>5</option>
+                        <option value={10} selected>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                    </select>
+                </div>
+                
+                <div className="search-box">
+                    <label htmlFor="toggleSearch">Busqueda automática</label>
+                    <input type="checkbox" id='toggleSearch' name="toggleSearch" onInput={(e) => {
+                        let state = (e.target as HTMLInputElement).checked;
+                        onSearchToggle(state);
+                    }} />
+                </div>
+            </div>
             <div className="table-scroll">
                 <table className="data-table">
                     <TableHeader headerGroups={table.getHeaderGroups()} />

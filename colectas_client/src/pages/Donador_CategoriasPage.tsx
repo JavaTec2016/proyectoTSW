@@ -26,7 +26,11 @@ export function Donador_CategoriasPage() {
     const postMsg = 'Categoria agregada';
     const putMsg = 'Categoria modificada';
     const serverErrorMsg = 'Error del servidor, intentelo mas tarde';
-    const detailError = 'Error al cargar los detalles, intentelo mas tarde'
+    const detailError = 'Error al cargar los detalles, intentelo mas tarde';
+    const tableColumns = ['nombre'];
+    const tableColumnNames = ['Nombre'];
+    const tableHeader = { title: 'Categorias'.toUpperCase(), subtitle: 'Registros' };
+    const detailHeader = { title: 'Categoria', subtitle: 'Detalles' };
 
     function detalles(id: string) {
         setHideDetail(false);
@@ -120,29 +124,14 @@ export function Donador_CategoriasPage() {
                     }} />
 
                     <div className="table-panel">
-
-                        <div className="table-panel-header justify-content-between">
-                            <p className="panel-title">CATEGORÍAS</p>
-                            <div className="search-box">
-                                <label htmlFor="toggleSearch">Busqueda automática</label>
-                                <input type="checkbox" id='toggleSearch' name="toggleSearch" onInput={(e) => {
-
-                                    let state = (e.target as HTMLInputElement).checked;
-                                    setToggleSearch(state);
-                                    console.log('togle', state)
-                                    if (state) searchWith('agregarForm');
-                                    else getRegistros();
-                                }} />
-                            </div>
-                        </div>
-                         <Tabler data={tableData} columns={['nombre']} columNames={['Nombre']} primaryField="id"
-                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
+                         <Tabler onSearchToggle={(state)=>setToggleSearch(state)} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
+                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader}/>
                     </div>
                     <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
                 </div>
                 <hr />
                 <div className="content-row">
-                    <DetallerPanel id="detalle" headerInfo={{ title: 'Categoria', subtitle: 'Detalles' }} hidden={hideDetail} setHidden={setHideDetail}>
+                    <DetallerPanel id="detalle" headerInfo={detailHeader} hidden={hideDetail} setHidden={setHideDetail}>
                         {detailData == null ? (
                         <div className="form-row">
                             <p className="panel-title" style={{ color: 'var(--text-muted)' }}>{detailError}</p>

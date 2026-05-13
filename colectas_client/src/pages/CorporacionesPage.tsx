@@ -29,6 +29,7 @@ export function CorporacionesPage() {
     const detailError = 'Error al cargar los detalles, intentelo mas tarde'
     const tableColumns = ['nombre', 'telefono', 'email'];
     const tableColumnNames = ['Nombre', 'Teléfono', 'Correo'];
+    const tableHeader = { title: 'Corporaciones'.toUpperCase(), subtitle: 'Registros' };
     const detailHeader = { title: 'Corporacion', subtitle: 'Detalles' };
     function detalles(id: string) {
         setHideDetail(false);
@@ -122,22 +123,8 @@ export function CorporacionesPage() {
                     }} />
 
                     <div className="table-panel">
-
-                        <div className="table-panel-header justify-content-between">
-                            <p className="panel-title">CORPORACIONES</p>
-                            <div className="search-box">
-                                <label htmlFor="toggleSearch">Busqueda automática</label>
-                                <input type="checkbox" id='toggleSearch' name="toggleSearch" onInput={(e) => {
-
-                                    let state = (e.target as HTMLInputElement).checked;
-                                    setToggleSearch(state);
-                                    if (state) searchWith('agregarForm');
-                                    else getRegistros();
-                                }} />
-                            </div>
-                        </div>
                         <Tabler data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
-                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} />
+                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
 
                     </div>
                     <CorporacionForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
