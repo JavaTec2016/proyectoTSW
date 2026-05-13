@@ -5,9 +5,12 @@ export function Navigation({brandContent, children}:{brandContent?:React.ReactNo
   return (
     <Navbar expand="md" sticky="top" className="navbar app-navbar">
       <div className="container-fluid">
-        <Navbar.Brand className="navbar-text" href="/">
-          {brandContent ? brandContent : 'Colectas'}
-        </Navbar.Brand>
+        {brandContent ? brandContent : (
+          <Navbar.Brand className="navbar-text" href="/">
+            Landing
+          </Navbar.Brand>
+        )}
+        
         <div className="navbar-divider"></div>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

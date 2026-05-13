@@ -7,7 +7,7 @@ import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
-import { Nav } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 
 
 export function Donador_CategoriasPage() {
@@ -116,6 +116,7 @@ export function Donador_CategoriasPage() {
 
             <Navigation>
                 <Nav.Link href="#top">Inicio</Nav.Link>
+                <Nav.Link href="/colectas">Colectas</Nav.Link>
             </Navigation>
             <Breadcrumb path="/categorias" />
 

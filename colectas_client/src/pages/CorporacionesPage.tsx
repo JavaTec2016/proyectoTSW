@@ -115,6 +115,7 @@ export function CorporacionesPage() {
 
             <Navigation>
                 <Nav.Link href="#top">Inicio</Nav.Link>
+                <Nav.Link href="/colectas">Colectas</Nav.Link>
             </Navigation>
             <Breadcrumb path="/colectas/corporaciones" />
 
