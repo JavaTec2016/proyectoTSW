@@ -12,7 +12,7 @@ function DetallerPanel({id, headerInfo, hidden=true, setHidden, children}:{heade
         </div>
         
         <div className="panel-divider" style={{marginLeft:'-0.5rem', marginRight:'-0.5rem'}}></div>
-        <div className='form-scroll'>
+        <div className='form-scroll' style={{paddingLeft:'5%', paddingRight:'5%'}}>
           {children}
         </div>
         

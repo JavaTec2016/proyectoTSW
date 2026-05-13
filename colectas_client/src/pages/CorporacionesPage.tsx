@@ -152,33 +152,40 @@ export function CorporacionesPage() {
                         ) : (
                             <>
                                 <div className="form-row">
+                                    <div className="navbar-divider"></div>
                                     <div className="form-group">
                                         <div className="d-flex">
                                             <p className="panel-title me-1">ID: </p> <p className="ms-1">{detailData['id']}</p>
                                         </div>
                                     </div>
+                                    <div className="navbar-divider"></div>
                                     <div className="form-group">
                                         <div className="d-flex">
                                             <p className="panel-title me-1">Nombre: </p> <p className="ms-1">{detailData['nombre']}</p>
                                         </div>
                                     </div>
+                                    <div className="navbar-divider"></div>
                                     <div className="form-group">
                                         <div className="d-flex">
                                             <p className="panel-title me-1">Dirección: </p> <p className="ms-1">{detailData['direccion']}</p>
                                         </div>
                                     </div>
+                                    <div className="navbar-divider"></div>
                                 </div>
                                 <div className="form-row">
+                                    <div className="navbar-divider"></div>
                                     <div className="form-group">
                                         <div className="d-flex">
                                             <p className="panel-title me-1">Teléfono: </p> <p className="ms-1">{detailData['telefono']}</p>
                                         </div>
                                     </div>
+                                    <div className="navbar-divider"></div>
                                     <div className="form-group">
                                         <div className="d-flex">
                                             <p className="panel-title me-1">Correo electrónico: </p> <p className="ms-1">{detailData['email']}</p>
                                         </div>
                                     </div>
+                                    <div className="navbar-divider"></div>
                                 </div>
                             </>
                         )}
