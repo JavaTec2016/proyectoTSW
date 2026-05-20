@@ -14,12 +14,18 @@ class API {
     
     static CATEGORIAS = 'categorias/'
     static CORPORACONES = 'corporaciones/'
+    static EVENTOS = 'eventos/'
     static endpoints = new Set<string>()
-    
+    static auth = false;
+
     static init(){
         this.endpoints
         .add(this.CATEGORIAS)
         .add(this.CORPORACONES)
+        .add(this.EVENTOS)
+    }
+    static setAuth(state:boolean){
+        this.auth = state;
     }
     /**
      * 
@@ -81,6 +87,9 @@ class API {
         let res = await fetch(urlFinal, {method:'PUT', body:JSON.stringify(body), headers:{'Content-Type':'application/json'}})
         if(!res.ok) return {'error': await res.text()}
         return {message: await res.text()};
+    }
+    static async login(credentials:{user:string, password:string}){
+
     }
 }
 API.init()

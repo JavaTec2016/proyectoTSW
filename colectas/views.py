@@ -18,4 +18,9 @@ class Donador_CategoriaView(viewsets.ModelViewSet):
     queryset = Donador_Categoria.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = Donador_CategoriaFilter
-    
+
+class EventoView(viewsets.ModelViewSet):
+    serializer_class = EventoSerializer
+    queryset = Evento.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = EventoFilter

@@ -115,8 +115,10 @@ export function Donador_CategoriasPage() {
         <div className="app-shell">
 
             <Navigation>
+                <Nav>
                 <Nav.Link href="#top">Inicio</Nav.Link>
                 <Nav.Link href="/colectas">Colectas</Nav.Link>
+                </Nav>
             </Navigation>
             <Breadcrumb path="/categorias" />
 

@@ -6,7 +6,7 @@ from .views import *
 router = routers.DefaultRouter()
 router.register(r'corporaciones', CorporacionView, 'corporaciones')
 router.register(r'categorias', Donador_CategoriaView, 'categorias')
-
+router.register(r'eventos', EventoView, 'eventos')
 urlpatterns = [
     path("api/v1/", include(router.urls)),
     path("schema/", SpectacularAPIView.as_view(), name='schema'),

@@ -1,9 +1,9 @@
-export function EventoCard({ imgSource, alt, title, body, badges, style = {} }: { imgSource: string, alt: string, title: string, body: string, badges: string[], width?: string, height?: string, style: React.CSSProperties }){
+export function EventoCard({ imgSource, alt, title, body, badges, style = {} }: { imgSource: string, alt: string, title: string, body: string, badges: string[], width?: string, height?: string, style: React.CSSProperties }) {
     return (
         <div className='card' style={style}>
-            <img src={imgSource} className='card-image-top' alt={alt}/>
+            <img src={imgSource} className='card-image-top' alt={alt} />
             <div className="badges pb-3">
-                {badges.map(text=>(
+                {badges.map(text => (
                     <span key={text} className="badge bg-info">{text}</span>
                 ))}
             </div>

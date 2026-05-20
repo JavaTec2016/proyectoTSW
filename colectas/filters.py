@@ -25,3 +25,14 @@ class Donador_CategoriaFilter(django_filters.FilterSet):
     class Meta:
         model = Donador_Categoria
         fields = ['id']
+
+class EventoFilter(django_filters.FilterSet):
+    nombre = django_filters.CharFilter(lookup_expr='icontains')
+    fecha_inicio = django_filters.DateFilter(lookup_expr='icontains')
+    fecha_fin = django_filters.DateFilter(lookup_expr='icontains')
+    tipo = django_filters.CharFilter(lookup_expr='icontains')
+    descripcion = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Evento
+        fields = ['id']

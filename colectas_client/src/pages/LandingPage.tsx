@@ -1,19 +1,30 @@
 import React from 'react'
 import { Navigation } from '../components/Navigation'
-import { Nav } from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap'
 import { EventoCard } from '../components/landing/TipoEventoCard'
 function LandingPage() {
   return (
     <div className='app-shell'>
-      <Navigation>
-        <Nav.Link href="#top">Inicio</Nav.Link>
-        <Nav.Link href="/colectas/categorias">Categorias</Nav.Link>
-        <Nav.Link href="/colectas/corporaciones">Corporaciones</Nav.Link>
+      <Navigation brandContent={
+        <Navbar.Brand className="navbar-text" href="#top">
+          Universidad Beta
+        </Navbar.Brand>
+      }>
+        <Nav>
+          <Nav.Link href="#top">Inicio</Nav.Link>
+          <Nav.Link href="/colectas/categorias">Categorias</Nav.Link>
+          <Nav.Link href="/colectas/corporaciones">Corporaciones</Nav.Link>
+          <Nav.Link href="/colectas/eventos">Eventos</Nav.Link>
+        </Nav>
+        <Nav>
+          <a href="/login" className='btn btn-outline-primary m-2'>Acceder</a>
+          <a href="/registrar" className='btn btn-outline-success m-2'>Registro</a>
+        </Nav>
       </Navigation>
       <main>
         {/**Banner */}
         <div className='container-fluid banner'>
-          <img src="../assets/img/c carros 8k.png" alt="banner" className='overlay-banner' style={{width:'100%', height:'95vh'}}/>
+          <img src="../assets/img/c carros 8k.png" alt="banner" className='overlay-banner' style={{ width: '100%', height: '95vh' }} />
           {/**Overlay del banner */}
           <div className='overlay'>
             <div className='container'>
@@ -31,7 +42,7 @@ function LandingPage() {
             </div>
           </div>
         </div>
-        
+
         <section id='eventosCarousel' className='justify-content-center'>
           <div className='container'>
             <div className="row">
@@ -39,10 +50,10 @@ function LandingPage() {
                 <h3 className='pt-4'>Eventos:</h3>
               </div>
             </div>
-            <div className="pb-4 pt-4 align-items-center" style={{overflowX: 'auto'}}>
+            <div className="pb-4 pt-4 align-items-center" style={{ overflowX: 'auto' }}>
               <div className="d-flex pb-4 pt-3 justify-content-center">
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Fonotones' title='Fonotones' body='Lorem Ipsum Fonotonium'
-                  badges={['Evento de recaudacion']} style={{width:'28rem', margin:'2rem 2rem'}}></EventoCard>
+                  badges={['Evento de recaudacion']} style={{ width: '28rem', margin: '2rem 2rem' }}></EventoCard>
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Festivales' title='Festivales' body='Lorem Ipsum Festivaldo'
                   badges={['Evento de recaudacion']} style={{ width: '28rem', margin: '2rem 2rem' }}></EventoCard>
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Reuniones' title='Reuniones' body='Lorem Ipsum Reunionam'
@@ -51,7 +62,7 @@ function LandingPage() {
               </div>
             </div>
           </div>
-          
+
         </section>
       </main>
 

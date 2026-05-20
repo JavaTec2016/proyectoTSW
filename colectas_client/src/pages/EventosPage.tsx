@@ -8,9 +8,11 @@ import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
 import { Nav } from "react-bootstrap";
+import DetallerFields from "../components/DetallerFields";
+import EventoForm from "../components/forms/EventoForm";
 
 
-export function CorporacionesPage() {
+export function EventosPage() {
     const [refresh, setRefresh] = useState(Date.now())
     const [hideForm, setHideForm] = useState(true);
     const [updateData, setUpdateData] = useState({});
@@ -20,17 +22,27 @@ export function CorporacionesPage() {
     const [hideDetail, setHideDetail] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
 
-    const ENDPOINT = API.CORPORACONES;
-    const deleteConfirm = 'Desea ELIMINAR la corporacion? cualquier registro que la utilice tambien sera eliminado.';
-    const deleteMsg = 'Corporacion eliminada';
-    const postMsg = "Corporacion agregada";
-    const putMsg = "Corporacion modificada";
+    const ENDPOINT = API.EVENTOS;
+    const deleteConfirm = 'Desea ELIMINAR el evento? cualquier registro que lo utilice tambien sera eliminado.';
+    const deleteMsg = 'Evento eliminado';
+    const postMsg = "Evento agregado";
+    const putMsg = "Evento modificado";
     const serverErrorMsg = 'Error del servidor, intentelo mas tarde';
     const detailError = 'Error al cargar los detalles, intentelo mas tarde'
-    const tableColumns = ['nombre', 'telefono', 'email'];
-    const tableColumnNames = ['Nombre', 'Teléfono', 'Correo'];
-    const tableHeader = { title: 'Corporaciones'.toUpperCase(), subtitle: 'Registros' };
-    const detailHeader = { title: 'Corporacion', subtitle: 'Detalles' };
+    const tableColumns = ['nombre', 'tipo', 'fecha_inicio'];
+    const tableColumnNames = ['Nombre', 'Tipo', 'Fecha de inicio'];
+    const tableHeader = { title: 'Eventos'.toUpperCase(), subtitle: 'Registros' };
+    const detailHeader = { title: 'Evento', subtitle: 'Detalles' };
+    const formPostInfo = {title:'Agregar Evento', subtitle:'Ingrese la información'};
+    const formPutInfo = {title:'Actualizar Evento', subtitle:'Ingrese la información'};
+    const labels = {
+        id: 'ID',
+        nombre: 'Nombre',
+        fecha_inicio: 'Fecha de inicio',
+        fecha_fin: 'Fecha de fin',
+        tipo: 'Tipo de evento',
+        descripcion: 'Descripcion',
+    }
     function detalles(id: string) {
         setHideDetail(false);
         location.href = '#' + 'detalle'
@@ -102,9 +114,9 @@ export function CorporacionesPage() {
         });
 
     }
-    function ontoggle(state:boolean){
+    function ontoggle(state: boolean) {
         setToggleSearch(state);
-        if(!state) getRegistros();
+        if (!state) getRegistros();
         else searchWith('agregarForm');
     }
     useEffect(() => {
@@ -119,12 +131,12 @@ export function CorporacionesPage() {
                 <Nav.Link href="/colectas">Colectas</Nav.Link>
                 </Nav>
             </Navigation>
-            <Breadcrumb path="/colectas/corporaciones" />
+            <Breadcrumb path="/colectas/eventos" />
 
             <main className="page-content">
                 <div className="content-row">
 
-                    <CorporacionForm id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
+                    <EventoForm title={formPostInfo.title} subtitle={formPostInfo.subtitle} id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
                         console.log(toggleSearch)
                         if (!toggleSearch) return;
                         searchWith('agregarForm')
@@ -135,7 +147,7 @@ export function CorporacionesPage() {
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
 
                     </div>
-                    <CorporacionForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
+                    <EventoForm title={formPutInfo.title} subtitle={formPutInfo.subtitle} id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
                 </div>
                 <hr />
                 <div className="content-row">
@@ -145,44 +157,7 @@ export function CorporacionesPage() {
                                 <p className="panel-title" style={{ color: 'var(--text-muted)' }}>{detailError}</p>
                             </div>
                         ) : (
-                            <>
-                                <div className="form-row">
-                                    <div className="navbar-divider"></div>
-                                    <div className="form-group">
-                                        <div className="d-flex">
-                                            <p className="panel-title me-1">ID: </p> <p className="ms-1">{detailData['id']}</p>
-                                        </div>
-                                    </div>
-                                    <div className="navbar-divider"></div>
-                                    <div className="form-group">
-                                        <div className="d-flex">
-                                            <p className="panel-title me-1">Nombre: </p> <p className="ms-1">{detailData['nombre']}</p>
-                                        </div>
-                                    </div>
-                                    <div className="navbar-divider"></div>
-                                    <div className="form-group">
-                                        <div className="d-flex">
-                                            <p className="panel-title me-1">Dirección: </p> <p className="ms-1">{detailData['direccion']}</p>
-                                        </div>
-                                    </div>
-                                    <div className="navbar-divider"></div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="navbar-divider"></div>
-                                    <div className="form-group">
-                                        <div className="d-flex">
-                                            <p className="panel-title me-1">Teléfono: </p> <p className="ms-1">{detailData['telefono']}</p>
-                                        </div>
-                                    </div>
-                                    <div className="navbar-divider"></div>
-                                    <div className="form-group">
-                                        <div className="d-flex">
-                                            <p className="panel-title me-1">Correo electrónico: </p> <p className="ms-1">{detailData['email']}</p>
-                                        </div>
-                                    </div>
-                                    <div className="navbar-divider"></div>
-                                </div>
-                            </>
+                            <DetallerFields data={detailData} labelSchema={labels} layout={[['id', 'nombre'], ['fecha_inicio', 'fecha_fin', 'tipo'], ['descripcion']]}></DetallerFields>
                         )}
                     </DetallerPanel>
                 </div>

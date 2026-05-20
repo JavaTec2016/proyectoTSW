@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-import TableRow from "./TableRow"
 import { flexRender, type Row } from "@tanstack/react-table"
 
 function TableBodier({data}:{data:Row<{[x:string]:any}>[]}) {
