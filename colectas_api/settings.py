@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'coreapi',
     'colectas',
     'django_filters',
     'drf_spectacular',
+    'rest_framework_simplejwt.token_blacklist',
     
 ]
 
@@ -139,10 +141,41 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173"
 ]
+CORS_ALLOW_CREDENTIALS = True
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    'Authorization',       # Required for Bearer token auth
+    'X-Api-Key',           # Example of a custom header
+    'Content-Type',        # Often required for JSON requests
+    'credentials',
+)
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Short-lived
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Long-lived
+    'ROTATE_REFRESH_TOKENS': True,      # Issues a new refresh token on every refresh
+    'BLACKLIST_AFTER_ROTATION': True,   # Invalidates old refresh token after rotation
+    'AUTH_COOKIE': 'refresh_token',
+    'AUTH_COOKIE_SAMESITE': 'None',
+    'AUTH_COOKIE_SECURE': True,
+}
+
+AUTH_USER_MODEL = "colectas.Userio"
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Colectas API',
     'DESCRIPTION': 'Backend pal proyecto web',

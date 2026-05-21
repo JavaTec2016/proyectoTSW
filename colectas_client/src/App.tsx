@@ -8,9 +8,11 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/login/Login';
 import Register from './pages/login/Register';
 import { EventosPage } from './pages/EventosPage';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<LandingPage/>}></Route>
@@ -22,6 +24,7 @@ function App() {
       </Routes>
       <Toaster />
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

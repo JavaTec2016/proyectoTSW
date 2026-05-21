@@ -24,7 +24,7 @@ function LandingPage() {
       <main>
         {/**Banner */}
         <div className='container-fluid banner'>
-          <img src="../assets/img/c carros 8k.png" alt="banner" className='overlay-banner' style={{ width: '100%', height: '95vh' }} />
+          <img src="../assets/img/c carros 8k.png" alt="banner" className='overlay-banner' style={{ width: '100%' }} />
           {/**Overlay del banner */}
           <div className='overlay'>
             <div className='container'>

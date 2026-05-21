@@ -1,28 +1,38 @@
 import React, { useState } from 'react'
+import API from '../../api/api';
 
 function Register() {
+    const [user, setUser] = useState('');
+    const [pass, setPass] = useState('');
+    
     const [passMatch, setPassMatch] = useState(false);
-    function matchea(){
-        const p1 = document.getElementById('password') as HTMLInputElement;
-        const p2 = document.getElementById('passwordConfirm') as HTMLInputElement;
-        setPassMatch(p1.value == p2.value)
-        return passMatch;
+    function matchPass(matched:string){
+        setPassMatch(pass == matched);
+    }
+    async function submit(e:React.SubmitEvent<HTMLFormElement>){
+        e.preventDefault();
+        if(!passMatch) return;
+
+        let res = await API.register({username:user, password:pass})
+        if(res.error){
+            alert('Error: ' + res.error)
+        }else alert('Registrado exitosamente, puede iniciar sesion')
     }
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="card shadow p-4" style={{width: "100%", maxWidth:"400px"}}>
             
-            <form method="post" role="form" onSubmit={()=>matchea()}>
+            <form method="post" role="form" onSubmit={submit}>
               
                 <h2 className="text-center mb-4"> Inicie sesion</h2>
         
                     <div className="mb-3">
                     <label className='form-label' htmlFor="usuario">Usuario: </label>
-                    <input className='form-control' type="text" name='usuario' id='usuario' />
+                    <input className='form-control' type="text" name='usuario' id='usuario' value={user} onChange={e => setUser(e.target.value)} placeholder='Nombre de usuario'  />
                     <label className='form-label'  htmlFor="password">Contraseña: </label>
-                    <input className='form-control'  type="text" name='password' id='password' />
+                    <input className='form-control'  type="text" name='password' id='password' value={pass} onChange={e => setPass(e.target.value)} placeholder='Contraseña'  />
                     <label className='form-label'  htmlFor="passwordConfirm">Confirmar contraseña: </label>
-                    <input className='form-control'  type="text" name='passwordConfirm' id='passwordConfirm' />
+                    <input className='form-control'  type="text" name='passwordConfirm' id='passwordConfirm' onChange={e => matchPass(e.target.value)} placeholder='Confirmar' />
                     {passMatch && (<p className='text-danger'>Las contraseñas no coinciden</p>)}
                     </div>
                     <br />

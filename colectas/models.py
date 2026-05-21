@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
@@ -9,11 +11,6 @@ class Corporacion(models.Model):
 
 class Clase(models.Model):
     anio_graduacion = models.PositiveSmallIntegerField(unique=True, primary_key=True)
-
-class Usuario(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
-    rol = models.CharField(max_length=30)
 
 class Circulo(models.Model):
     nombre = models.CharField(max_length=40, unique=True)
@@ -84,5 +81,6 @@ class Llamada(models.Model):
     observaciones = models.TextField(max_length=1000)
 
 class Userio(AbstractUser):
-    rol = models.CharField(max_length=255)
+    rol = models.CharField(max_length=255, default='usuario')
+    date_joined = models.DateTimeField(default=timezone.now)
     pass
