@@ -25,7 +25,7 @@ class API {
 
     static endpoints = new Set<string>()
     static auth = true;
-    static accessToken:string | null = '';
+     static accessToken:string | null = '';
 
     static init(){
         this.endpoints
@@ -66,7 +66,6 @@ class API {
         }
         return urlFinal;
     }
-
     /**
      * Metodo base para requests
      * @param url URL final a fetchear
@@ -75,7 +74,8 @@ class API {
      * @param auth habilitar autenticacion (si)
      * @returns objeto con los datos del response, o datos del error si truena
      */
-    static async request(url:string, method:'POST'|'GET'|'PUT'|'DELETE'|'HEAD', body?:{[x:string]:any} | null, auth = this.auth):Promise<{[x:string]:any, data?:{[x:string]:any}, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>{
+    static async request(url:string, method:'POST'|'GET'|'PUT'|'DELETE'|'HEAD', body?:{[x:string]:any} | null, auth = this.auth):Promise<{[x:string]:any, data?:any, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>{
+        
         let headers:{[x:string]:string} = {'Content-Type':'application/json'}
         if(auth){ //saca el token de algun lado
             headers['Authorization'] = `Bearer ${this.accessToken}`;
@@ -88,7 +88,9 @@ class API {
         if(method != 'GET' && method != 'HEAD') fetchObject['body'] = JSON.stringify(body);
         const response = await fetch(url, fetchObject);
         if(!response.ok){
-            return {error: await response.json(), status:response.status, headers:response.headers};
+            console.log( await response.text())
+            let res = {error: await response.json(), status:response.status, headers:response.headers};
+            return res;
         }
         return {data: await response.json(), headers:response.headers};
     }
@@ -122,14 +124,17 @@ class API {
     
 
     ///============AUTENTICACION
-
+    static access(token:string){
+        this.accessToken = token;
+        return this;
+    }
     static async register(body:{username:string, password:string}){
         let urlFinal = this.getUrl(this.REGISTRAR);
         return await this.request(urlFinal, 'POST', body, false);
     }
     static async login(body:{username:string, password:string}){
         let urlFinal = this.getUrl(this.LOGIN);
-        const res = await this.request(urlFinal, 'POST', body, false);
+        const res = await this.request(urlFinal, 'POST', body);
         console.log(res.headers);
         return res;
     }

@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s)uw@p22k5l9x^i)+mkm#3=ny17pl9ikm=(80oi5t3398$i65f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -68,7 +68,7 @@ ROOT_URLCONF = 'colectas_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,7 +136,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static')
+]
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #CORS SI
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173"
@@ -166,14 +171,13 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Short-lived
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Long-lived
-    'ROTATE_REFRESH_TOKENS': True,      # Issues a new refresh token on every refresh
-    'BLACKLIST_AFTER_ROTATION': True,   # Invalidates old refresh token after rotation
-    'AUTH_COOKIE': 'refresh_token',
-    'AUTH_COOKIE_SAMESITE': 'None',
-    'AUTH_COOKIE_SECURE': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
+COOKIE_SECURE   = not DEBUG
+COOKIE_SAMESITE = 'Lax' if DEBUG else 'None'
 
 AUTH_USER_MODEL = "colectas.Userio"
 SPECTACULAR_SETTINGS = {
@@ -183,3 +187,4 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
+

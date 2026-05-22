@@ -8,10 +8,10 @@ import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
 import { Nav } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
 
 
 export function CorporacionesPage() {
-    const [refresh, setRefresh] = useState(Date.now())
     const [hideForm, setHideForm] = useState(true);
     const [updateData, setUpdateData] = useState({});
     const [updateId, setUpdateId] = useState<any>(null);
@@ -19,7 +19,7 @@ export function CorporacionesPage() {
     const [toggleSearch, setToggleSearch] = useState(false);
     const [hideDetail, setHideDetail] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
-
+    const { accessToken } = useAuth();
     const ENDPOINT = API.CORPORACONES;
     const deleteConfirm = 'Desea ELIMINAR la corporacion? cualquier registro que la utilice tambien sera eliminado.';
     const deleteMsg = 'Corporacion eliminada';
@@ -36,10 +36,10 @@ export function CorporacionesPage() {
         location.href = '#' + 'detalle'
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
-                toast.error(detailError)
+                toast.error(result.error.detail)
                 setDetailData(null);
             }
-            setDetailData(result);
+            setDetailData(result.data);
         })
     }
     function setModal(id: string) {
@@ -98,18 +98,23 @@ export function CorporacionesPage() {
     }
     async function getRegistros(filtros: { [x: string]: any } = {}) {
         API.get(ENDPOINT, filtros).then(regs => {
-            setTableData(regs);
+            if(regs.error){
+                return
+            }
+            console.log(regs)
+            setTableData(regs.data!);
         });
-
     }
     function ontoggle(state:boolean){
         setToggleSearch(state);
         if(!state) getRegistros();
         else searchWith('agregarForm');
     }
-    useEffect(() => {
+    useEffect(()=>{
+        console.log('YA PUEDE JALAR: ', API.accessToken, ' == ', accessToken)
         getRegistros();
-    }, [])
+    }, [accessToken])
+
     return (
         <div className="app-shell">
 

@@ -1,19 +1,23 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import API from "../api/api";
+import LoadingScreen from "../components/LoadingScreen";
 
 type LoginContext = {
     user:string | null,
     accessToken: string | null,
+    isLoading: boolean,
     login: (creds:{[x:string]:any, username:string, password:string}) => Promise<any>,
     logout: ()=> Promise<any>
 }
 const AuthContext = createContext<LoginContext | null>(null);
 export function AuthProvider({children}:{children:React.ReactNode}){
     const [user, setUser] = useState<string | null>(null);
-    const [accessToken, setAccessToken] = useState<string | null>(null);
-    const refreshInterval = useRef(60);
+    const [accessToken, setAccessToken] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
+    const refreshInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const startRefresh = () => {
+        if(refreshInterval.current) clearInterval(refreshInterval.current)
         refreshInterval.current = setInterval(async()=>{
             await refreshAccessToken();
         }, 14 * 60 * 1000)
@@ -22,29 +26,50 @@ export function AuthProvider({children}:{children:React.ReactNode}){
     const refreshAccessToken = async () =>{
         try{
             const res = await API.refresh();
-            setAccessToken(res.access)
-            return res.access;
+            setAccessToken(res.data.access)
+            return res.data.access;
         }catch(e){
-            logout();
+            //logout();
         }
     }
     const login = async(creds:{[x:string]:any, username:string, password:string}) => {
         const res = await API.login(creds);
         if(res.error) throw new Error(res.error.code)
         setUser(creds.username);
-        setAccessToken(res.access!);
+        setAccessToken(res.data!.access);
         startRefresh();
-        API.accessToken = res.access!;
     }
 
     const logout = async() => {
+        if(refreshInterval.current) {
+            clearInterval(refreshInterval.current)
+            refreshInterval.current = null;
+        }
         await API.logout();
-        setAccessToken(null);
+        setAccessToken('');
         setUser(null);
     }
 
+    useEffect(()=>{
+       API.access(accessToken)
+    }, [accessToken])
+    useEffect(()=>{
+        const restoreSession = async() =>{
+            try{
+                const res = await API.refresh();
+                setAccessToken(res.data.access);
+                startRefresh();
+            }catch {
+                console.warn('No hay sesion')
+            } finally {
+                setIsLoading(false)
+            }
+        };
+        restoreSession();
+    }, [])
+
     return (
-        <AuthContext.Provider value={{user, accessToken, login, logout}}>
+        <AuthContext.Provider value={{user, accessToken, isLoading, login, logout}}>
             {children}
         </AuthContext.Provider>
     )
@@ -53,5 +78,5 @@ export function AuthProvider({children}:{children:React.ReactNode}){
 export const useAuth = () => {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>')
-  return ctx  // TypeScript now knows ctx is AuthContextType, not null
+  return ctx 
 }

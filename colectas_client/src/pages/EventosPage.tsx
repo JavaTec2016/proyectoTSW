@@ -1,5 +1,4 @@
 import API from "../api/api";
-import CorporacionForm from "../components/forms/CorporacionForm";
 import { Tabler } from "../components/Tabler";
 import { useEffect, useState } from "react";
 import { toast } from 'react-hot-toast';
@@ -13,7 +12,6 @@ import EventoForm from "../components/forms/EventoForm";
 
 
 export function EventosPage() {
-    const [refresh, setRefresh] = useState(Date.now())
     const [hideForm, setHideForm] = useState(true);
     const [updateData, setUpdateData] = useState({});
     const [updateId, setUpdateId] = useState<any>(null);
@@ -110,7 +108,7 @@ export function EventosPage() {
     }
     async function getRegistros(filtros: { [x: string]: any } = {}) {
         API.get(ENDPOINT, filtros).then(regs => {
-            setTableData(regs);
+            setTableData(regs.data);
         });
 
     }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Navigation } from '../components/Navigation'
 import { Nav, Navbar } from 'react-bootstrap'
 import { EventoCard } from '../components/landing/TipoEventoCard'

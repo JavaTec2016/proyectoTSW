@@ -7,11 +7,11 @@ import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
 
 
 export function Donador_CategoriasPage() {
-    const [refresh, setRefresh] = useState(Date.now())
     const [hideForm, setHideForm] = useState(true);
     const [updateData, setUpdateData] = useState({});
     const [updateId, setUpdateId] = useState<any>(null);
@@ -19,7 +19,7 @@ export function Donador_CategoriasPage() {
     const [toggleSearch, setToggleSearch] = useState(false);
     const [hideDetail, setHideDetail] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
-
+    const { accessToken } = useAuth();
     const ENDPOINT = API.CATEGORIAS;
     const deleteConfirm = 'Desea ELIMINAR la categoria? cualquier registro que la utilice tambien sera eliminado.';
     const deleteMsg = 'Categoria eliminada';
@@ -37,20 +37,20 @@ export function Donador_CategoriasPage() {
         location.href = '#' + 'detalle'
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
-                toast.error(detailError)
+                toast.error(result.error.detail)
                 setDetailData(null);
             }
-            setDetailData(result);
+            setDetailData(result.data);
         })
     }
     function setModal(id: string) {
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
                 toast.error(serverErrorMsg);
-                console.error(result.error);
+                console.error(result.error.detail);
                 return;
             }
-            setUpdateData(result);
+            setUpdateData(result.data);
             setHideForm(false);
             setUpdateId(id);
         })
@@ -60,7 +60,7 @@ export function Donador_CategoriasPage() {
             API.delete(ENDPOINT, id).then((res) => {
                 if (res && res.error) {
                     toast.error(serverErrorMsg);
-                    console.error(res.error);
+                    console.error(res.error.detail);
                 }
                 else {
                     toast.success(deleteMsg)
@@ -99,7 +99,7 @@ export function Donador_CategoriasPage() {
     }
     async function getRegistros(filtros: { [x: string]: any } = {}) {
         API.get(ENDPOINT, filtros).then(regs => {
-            setTableData(regs);
+            setTableData(regs.data);
         });
 
     }
@@ -108,9 +108,13 @@ export function Donador_CategoriasPage() {
         if(!state) getRegistros();
         else searchWith('agregarForm');
     }
-    useEffect(() => {
+    
+    useEffect(()=>{
+        if(!API.accessToken) return;
+        console.log('AUTH TOKEN: ', API.accessToken)
         getRegistros();
-    }, [])
+    }, [API.accessToken])
+
     return (
         <div className="app-shell">
 

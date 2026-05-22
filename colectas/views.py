@@ -20,6 +20,8 @@ from .models import *
 from .serializer import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.conf import settings
 # Create your views here.
 
 class CorporacionView(viewsets.ModelViewSet):
@@ -57,6 +59,14 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
+    def post(self, request, *args, **kwargs):
+        
+        user = self.request.data['username']
+        if Userio.objects.filter(username=user).exists():
+            return Response({'detail':'Este usuario ya existe', 'code':'duplicate_user'}, status=status.HTTP_417_EXPECTATION_FAILED)
+        else:
+            return super().post(request, *args, **kwargs)
+
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -82,36 +92,45 @@ class CookieLoginView(TokenObtainPairView):
             res.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
-                httponly=False,
-                secure=False,
-                samesite='none',
-                max_age=7*24*60*60, #7 dias
+                httponly=True,
+                secure=settings.COOKIE_SECURE,
+                samesite=settings.COOKIE_SAMESITE,
+                max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'], #7 dias
+                path='/'
             )
+            print('LOGIN: success for ' + str(request.data.get('username')))
         return res
 
 class CookieRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         token = request.COOKIES.get('refresh_token')
+        print('Cookie received:', token)
         if not token:
+            print('no hay token')
             return Response({'detail': 'no hay token de refrees', 'code':'NO_REFRESH_TOKEN'}, status=status.HTTP_400_BAD_REQUEST)
         
         request.data['refresh'] = token
 
+        print('RESPONS: ', 'si')
         try:
             response = super().post(request, *args, **kwargs)
-        except (TokenError, InvalidToken) as e:
+        except Exception as e:
+            print('no jala el token: ', str(e))
             return Response({'detail':str(e), 'code':e.default_code}, status=status.HTTP_401_UNAUTHORIZED)
-
+        
         if response.status_code == 200:
             new_refresh = response.data.pop('refresh', None)
+            print('NUEVO TOKEN: ', new_refresh)
+            
             if new_refresh:
                 response.set_cookie(
                     key='refresh_token',
                     value=new_refresh,
                     httponly=True,
-                    secure=False,
-                    samesite='none',
-                    max_age=7*24*60*60, #7 dias
+                    secure=settings.COOKIE_SECURE,
+                    samesite=settings.COOKIE_SAMESITE,
+                    max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'], #7 dias
+                    path='/',
                 )
         return response
 

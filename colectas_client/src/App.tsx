@@ -9,21 +9,28 @@ import Login from './pages/login/Login';
 import Register from './pages/login/Register';
 import { EventosPage } from './pages/EventosPage';
 import { AuthProvider } from './context/AuthContext';
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
+const router = createBrowserRouter([
+  //rutas token
+  {
+    path:'/colectas',
+    element: <ProtectedRoute />,
+    children:[
+      {path:'categorias', element:<Donador_CategoriasPage />},
+      {path:'corporaciones', element:<CorporacionesPage />},
+      {path:'eventos', element:<EventosPage />},
+    ]
+  },
+  //rutas publicas
+  {path:'/', element:<LandingPage />},
+  {path: '/login', element: <Login/>},
+  {path: '/registrar', element: <Register/>},
+])
 function App() {
   return (
     <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<LandingPage/>}></Route>
-        <Route path='/login' element={<Login></Login>}></Route>
-        <Route path='/registrar' element={<Register></Register>}></Route>
-        <Route path="/colectas/categorias" element={<Donador_CategoriasPage />} />
-        <Route path="/colectas/corporaciones" element={<CorporacionesPage />} />
-        <Route path="/colectas/eventos" element={<EventosPage />} />
-      </Routes>
-      <Toaster />
-    </BrowserRouter>
+    <RouterProvider router={router} />
     </AuthProvider>
   );
 }
