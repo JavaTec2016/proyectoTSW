@@ -7,7 +7,7 @@ import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
 import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
-import { Nav } from "react-bootstrap";
+import { Nav, ToastContainer } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
 
@@ -59,12 +59,13 @@ export function Donador_CategoriasPage() {
         confirm(deleteConfirm) ?
             API.delete(ENDPOINT, id).then((res) => {
                 if (res && res.error) {
-                    toast.error(serverErrorMsg);
+                    toast.error(res.error.detail);
                     console.error(res.error.detail);
                 }
                 else {
                     toast.success(deleteMsg)
-                    searchWith('agregarForm');
+                    if (toggleSearch) searchWith('agregarForm');
+                    else getRegistros();
                 }
             }) : -1;
     }
@@ -76,8 +77,10 @@ export function Donador_CategoriasPage() {
                 console.error(msg.error);
                 return;
             }
+            console.log('Lograo', postMsg)
             toast.success(postMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function actualizar(data: { [x: string]: any }) {
@@ -89,7 +92,8 @@ export function Donador_CategoriasPage() {
                 return;
             }
             toast.success(putMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function searchWith(formId: string) {
@@ -103,25 +107,25 @@ export function Donador_CategoriasPage() {
         });
 
     }
-    function ontoggle(state:boolean){
+    function ontoggle(state: boolean) {
         setToggleSearch(state);
-        if(!state) getRegistros();
+        if (!state) getRegistros();
         else searchWith('agregarForm');
     }
-    
-    useEffect(()=>{
-        if(!API.accessToken) return;
+
+    useEffect(() => {
+        if (!API.accessToken) return;
         console.log('AUTH TOKEN: ', API.accessToken)
         getRegistros();
     }, [API.accessToken])
 
     return (
         <div className="app-shell">
-
+            <ToastContainer />
             <Navigation>
                 <Nav>
-                <Nav.Link href="#top">Inicio</Nav.Link>
-                <Nav.Link href="/colectas">Colectas</Nav.Link>
+                    <Nav.Link href="#top">Inicio</Nav.Link>
+                    <Nav.Link href="/colectas">Colectas</Nav.Link>
                 </Nav>
             </Navigation>
             <Breadcrumb path="/categorias" />
@@ -130,14 +134,13 @@ export function Donador_CategoriasPage() {
                 <div className="content-row">
 
                     <Donador_CategoriaForm id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
-                        console.log(toggleSearch)
                         if (!toggleSearch) return;
                         searchWith('agregarForm')
                     }} />
 
                     <div className="table-panel">
-                         <Tabler onSearchToggle={ontoggle} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
-                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader}/>
+                        <Tabler onSearchToggle={ontoggle} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
+                            onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
                     </div>
                     <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
                 </div>
@@ -145,22 +148,22 @@ export function Donador_CategoriasPage() {
                 <div className="content-row">
                     <DetallerPanel id="detalle" headerInfo={detailHeader} hidden={hideDetail} setHidden={setHideDetail}>
                         {detailData == null ? (
-                        <div className="form-row">
-                            <p className="panel-title" style={{ color: 'var(--text-muted)' }}>{detailError}</p>
-                        </div>
-                        ):(
-                        <div className="form-row">
-                            <div className="form-group">
-                                <div className="d-flex">
-                                    <p className="panel-title me-1">ID: </p> <p className="ms-1">{detailData['id']}</p>
+                            <div className="form-row">
+                                <p className="panel-title" style={{ color: 'var(--text-muted)' }}>{detailError}</p>
+                            </div>
+                        ) : (
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <div className="d-flex">
+                                        <p className="panel-title me-1">ID: </p> <p className="ms-1">{detailData['id']}</p>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <div className="d-flex">
+                                        <p className="panel-title me-1">Nombre: </p> <p className="ms-1">{detailData['nombre']}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <div className="d-flex">
-                                    <p className="panel-title me-1">Nombre: </p> <p className="ms-1">{detailData['nombre']}</p>
-                                </div>
-                            </div>
-                        </div>
                         )}
                     </DetallerPanel>
                 </div>

@@ -110,10 +110,11 @@ export function CorporacionesPage() {
         if(!state) getRegistros();
         else searchWith('agregarForm');
     }
-    useEffect(()=>{
-        console.log('YA PUEDE JALAR: ', API.accessToken, ' == ', accessToken)
+    useEffect(() => {
+        if (!API.accessToken) return;
+        console.log('AUTH TOKEN: ', API.accessToken)
         getRegistros();
-    }, [accessToken])
+    }, [API.accessToken])
 
     return (
         <div className="app-shell">

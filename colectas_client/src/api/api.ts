@@ -88,10 +88,12 @@ class API {
         if(method != 'GET' && method != 'HEAD') fetchObject['body'] = JSON.stringify(body);
         const response = await fetch(url, fetchObject);
         if(!response.ok){
-            console.log( await response.text())
+            console.log(await response.text())
+            await response.body?.cancel()
             let res = {error: await response.json(), status:response.status, headers:response.headers};
             return res;
         }
+        if((await response.clone().text()).length == 0) return{ data: {}, headers:response.headers}
         return {data: await response.json(), headers:response.headers};
     }
 

@@ -118,8 +118,10 @@ export function EventosPage() {
         else searchWith('agregarForm');
     }
     useEffect(() => {
+        if (!API.accessToken) return;
+        console.log('AUTH TOKEN: ', API.accessToken)
         getRegistros();
-    }, [])
+    }, [API.accessToken])
     return (
         <div className="app-shell">
 
