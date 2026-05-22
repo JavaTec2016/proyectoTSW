@@ -59,7 +59,7 @@ export function EventosPage() {
                 console.error(result.error);
                 return;
             }
-            setUpdateData(result);
+            setUpdateData(result.data);
             setHideForm(false);
             setUpdateId(id);
         })
