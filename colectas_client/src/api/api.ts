@@ -8,7 +8,7 @@ class API {
 
     //direccion
 
-    static ROOT = 'http://localhost:8000'
+    static ROOT = 'http://192.168.1.8:8000'
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     
@@ -88,8 +88,6 @@ class API {
         if(method != 'GET' && method != 'HEAD') fetchObject['body'] = JSON.stringify(body);
         const response = await fetch(url, fetchObject);
         if(!response.ok){
-            console.log(await response.text())
-            await response.body?.cancel()
             let res = {error: await response.json(), status:response.status, headers:response.headers};
             return res;
         }
@@ -141,7 +139,7 @@ class API {
         return res;
     }
     static async logout(){
-        let urlFinal = this.getUrl(this.LOGIN);
+        let urlFinal = this.getUrl(this.LOGOUT);
         return await this.request(urlFinal, 'POST', {});
     }
     static async refresh(){

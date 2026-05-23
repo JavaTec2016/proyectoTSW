@@ -50,6 +50,7 @@ class UserioView(viewsets.ModelViewSet):
     serializer_class = UserioSerializer
     queryset = Userio.objects.all()
     filter_backends = [DjangoFilterBackend]
+    
 
 #==========AUTENTICACION
 
@@ -62,10 +63,12 @@ class RegisterView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         
         user = self.request.data['username']
+        self.request.data['rol'] = 'admin'
         if Userio.objects.filter(username=user).exists():
             return Response({'detail':'Este usuario ya existe', 'code':'duplicate_user'}, status=status.HTTP_417_EXPECTATION_FAILED)
         else:
-            return super().post(request, *args, **kwargs)
+            res = super().post(request, *args, **kwargs)
+            return res
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -99,6 +102,9 @@ class CookieLoginView(TokenObtainPairView):
                 path='/'
             )
             print('LOGIN: success for ' + str(request.data.get('username')))
+            usr = Userio.objects.filter(username=request.data.get('username')).first()
+            res.data['rol'] = usr.rol
+            if usr.is_staff or usr.is_superuser: res.data['rol'] = 'admin'
         return res
 
 class CookieRefreshView(TokenRefreshView):
@@ -114,13 +120,20 @@ class CookieRefreshView(TokenRefreshView):
         print('RESPONS: ', 'si')
         try:
             response = super().post(request, *args, **kwargs)
+            
         except Exception as e:
             print('no jala el token: ', str(e))
             return Response({'detail':str(e), 'code':e.default_code}, status=status.HTTP_401_UNAUTHORIZED)
         
         if response.status_code == 200:
             new_refresh = response.data.pop('refresh', None)
-            print('NUEVO TOKEN: ', new_refresh)
+            dec_token = RefreshToken(new_refresh)
+            user_id = dec_token.get('user_id')
+            usr = Userio.objects.filter(id=user_id).first()
+            response.data['username'] = usr.username
+            response.data['rol'] = usr.rol
+            if usr.is_staff or usr.is_superuser: response.data['rol'] = 'admin'
+            print('Recuperando sesion de: ' + usr.username)
             
             if new_refresh:
                 response.set_cookie(

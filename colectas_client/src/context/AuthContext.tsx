@@ -1,9 +1,9 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
 import API from "../api/api";
-import LoadingScreen from "../components/LoadingScreen";
 
 type LoginContext = {
     user:string | null,
+    role:string | null,
     accessToken: string | null,
     isLoading: boolean,
     login: (creds:{[x:string]:any, username:string, password:string}) => Promise<any>,
@@ -12,6 +12,7 @@ type LoginContext = {
 const AuthContext = createContext<LoginContext | null>(null);
 export function AuthProvider({children}:{children:React.ReactNode}){
     const [user, setUser] = useState<string | null>(null);
+    const [role, setRole] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const refreshInterval = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -34,10 +35,12 @@ export function AuthProvider({children}:{children:React.ReactNode}){
     }
     const login = async(creds:{[x:string]:any, username:string, password:string}) => {
         const res = await API.login(creds);
-        if(res.error) throw new Error(res.error.code)
+        if(res.error) return res;
         setUser(creds.username);
+        setRole(res.data.rol)
         setAccessToken(res.data!.access);
         startRefresh();
+        return res;
     }
 
     const logout = async() => {
@@ -48,6 +51,7 @@ export function AuthProvider({children}:{children:React.ReactNode}){
         await API.logout();
         setAccessToken('');
         setUser(null);
+        setRole(null);
     }
 
     useEffect(()=>{
@@ -58,6 +62,8 @@ export function AuthProvider({children}:{children:React.ReactNode}){
             try{
                 const res = await API.refresh();
                 setAccessToken(res.data.access);
+                setUser(res.data.username);
+                setRole(res.data.rol)
                 startRefresh();
             }catch {
                 console.warn('No hay sesion')
@@ -69,7 +75,7 @@ export function AuthProvider({children}:{children:React.ReactNode}){
     }, [])
 
     return (
-        <AuthContext.Provider value={{user, accessToken, isLoading, login, logout}}>
+        <AuthContext.Provider value={{user, role, accessToken, isLoading, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

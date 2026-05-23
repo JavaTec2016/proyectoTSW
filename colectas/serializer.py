@@ -11,6 +11,7 @@ class Donador_CategoriaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EventoSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Evento
         fields = '__all__'
@@ -22,6 +23,7 @@ class UserioSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         usr = Userio.objects.create_user(**validated_data)
+        validated_data['rol'] = 'admin'
         if 'rol' in validated_data and validated_data['rol'] == 'admin': usr.is_staff = True
         return usr
     
@@ -39,6 +41,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'password']
     
     def create(self, validated_data):
+        validated_data['rol'] = 'admin'
         usr = Userio.objects.create_user(**validated_data)
         if 'rol' in validated_data and validated_data['rol'] == 'admin': usr.is_staff = True
         return usr

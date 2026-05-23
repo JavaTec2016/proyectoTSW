@@ -11,6 +11,7 @@ import { EventosPage } from './pages/EventosPage';
 import { AuthProvider } from './context/AuthContext';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import Dashboard from './pages/Dashboard';
 const router = createBrowserRouter([
   //rutas token
   {
@@ -22,15 +23,23 @@ const router = createBrowserRouter([
       {path:'eventos', element:<EventosPage />},
     ]
   },
+  {
+    path:'/admin', element:<ProtectedRoute />,
+    children:[
+      {path:'dashboard', element:<Dashboard />}
+    ]
+  },
   //rutas publicas
   {path:'/', element:<LandingPage />},
   {path: '/login', element: <Login/>},
   {path: '/registrar', element: <Register/>},
+  {path:'*', element: <Navigate to='/' replace />}
 ])
 function App() {
   return (
     <AuthProvider>
     <RouterProvider router={router} />
+    <Toaster />
     </AuthProvider>
   );
 }

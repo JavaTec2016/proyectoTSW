@@ -19,6 +19,7 @@ export function Donador_CategoriasPage() {
     const [toggleSearch, setToggleSearch] = useState(false);
     const [hideDetail, setHideDetail] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
+    const [hideEdit, setHideEdit] = useState(true);
     const { accessToken } = useAuth();
     const ENDPOINT = API.CATEGORIAS;
     const deleteConfirm = 'Desea ELIMINAR la categoria? cualquier registro que la utilice tambien sera eliminado.';
@@ -31,6 +32,8 @@ export function Donador_CategoriasPage() {
     const tableColumnNames = ['Nombre'];
     const tableHeader = { title: 'Categorias'.toUpperCase(), subtitle: 'Registros' };
     const detailHeader = { title: 'Categoria', subtitle: 'Detalles' };
+    const formPostInfo = {title:'Agregar Categoria', subtitle:'Ingrese la información'};
+    const formPutInfo = {title:'Actualizar Categoria', subtitle:'Ingrese la información'};
 
     function detalles(id: string) {
         setHideDetail(false);
@@ -50,8 +53,10 @@ export function Donador_CategoriasPage() {
                 console.error(result.error.detail);
                 return;
             }
+            console.log(result.data)
             setUpdateData(result.data);
             setHideForm(false);
+            setHideEdit(false);
             setUpdateId(id);
         })
     }
@@ -122,7 +127,7 @@ export function Donador_CategoriasPage() {
     return (
         <div className="app-shell">
             <ToastContainer />
-            <Navigation>
+            <Navigation includeSidebar={true}>
                 <Nav>
                     <Nav.Link href="#top">Inicio</Nav.Link>
                     <Nav.Link href="/colectas">Colectas</Nav.Link>
@@ -133,7 +138,7 @@ export function Donador_CategoriasPage() {
             <main className="page-content">
                 <div className="content-row">
 
-                    <Donador_CategoriaForm id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
+                    <Donador_CategoriaForm title={formPostInfo.title} subtitle={formPostInfo.subtitle} id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
                         if (!toggleSearch) return;
                         searchWith('agregarForm')
                     }} />
@@ -142,7 +147,11 @@ export function Donador_CategoriasPage() {
                         <Tabler onSearchToggle={ontoggle} data={tableData} columns={tableColumns} columNames={tableColumnNames} primaryField="id"
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
                     </div>
-                    <Donador_CategoriaForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
+                   
+                </div>
+                <hr />
+                <div className="content-row">
+                     <Donador_CategoriaForm closable={true} setHidden={setHideEdit} title={formPutInfo.title} subtitle={formPutInfo.subtitle} id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideEdit} />
                 </div>
                 <hr />
                 <div className="content-row">

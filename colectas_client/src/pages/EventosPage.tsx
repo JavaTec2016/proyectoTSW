@@ -19,7 +19,7 @@ export function EventosPage() {
     const [toggleSearch, setToggleSearch] = useState(false);
     const [hideDetail, setHideDetail] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
-
+    const [hideEdit, setHideEdit] = useState(true);
     const ENDPOINT = API.EVENTOS;
     const deleteConfirm = 'Desea ELIMINAR el evento? cualquier registro que lo utilice tambien sera eliminado.';
     const deleteMsg = 'Evento eliminado';
@@ -41,26 +41,27 @@ export function EventosPage() {
         tipo: 'Tipo de evento',
         descripcion: 'Descripcion',
     }
-    function detalles(id: string) {
+   function detalles(id: string) {
         setHideDetail(false);
         location.href = '#' + 'detalle'
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
-                toast.error(detailError)
+                toast.error(result.error.detail)
                 setDetailData(null);
             }
-            setDetailData(result);
+            setDetailData(result.data);
         })
     }
     function setModal(id: string) {
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
                 toast.error(serverErrorMsg);
-                console.error(result.error);
+                console.error(result.error.detail);
                 return;
             }
             setUpdateData(result.data);
             setHideForm(false);
+            setHideEdit(false);
             setUpdateId(id);
         })
     }
@@ -68,12 +69,13 @@ export function EventosPage() {
         confirm(deleteConfirm) ?
             API.delete(ENDPOINT, id).then((res) => {
                 if (res && res.error) {
-                    toast.error(serverErrorMsg);
-                    console.error(res.error);
+                    toast.error(res.error.detail);
+                    console.error(res.error.detail);
                 }
                 else {
                     toast.success(deleteMsg)
-                    searchWith('agregarForm');
+                    if (toggleSearch) searchWith('agregarForm');
+                    else getRegistros();
                 }
             }) : -1;
     }
@@ -85,8 +87,10 @@ export function EventosPage() {
                 console.error(msg.error);
                 return;
             }
+            console.log('Lograo', postMsg)
             toast.success(postMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function actualizar(data: { [x: string]: any }) {
@@ -98,7 +102,8 @@ export function EventosPage() {
                 return;
             }
             toast.success(putMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function searchWith(formId: string) {
@@ -117,6 +122,7 @@ export function EventosPage() {
         if (!state) getRegistros();
         else searchWith('agregarForm');
     }
+
     useEffect(() => {
         if (!API.accessToken) return;
         console.log('AUTH TOKEN: ', API.accessToken)
@@ -125,7 +131,7 @@ export function EventosPage() {
     return (
         <div className="app-shell">
 
-            <Navigation>
+            <Navigation includeSidebar={true}>
                 <Nav>
                 <Nav.Link href="#top">Inicio</Nav.Link>
                 <Nav.Link href="/colectas">Colectas</Nav.Link>
@@ -147,7 +153,10 @@ export function EventosPage() {
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
 
                     </div>
-                    <EventoForm title={formPutInfo.title} subtitle={formPutInfo.subtitle} id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
+                </div>
+                <hr />
+                <div className="content-row">
+                    <EventoForm closable={true} setHidden={setHideEdit} title={formPutInfo.title} subtitle={formPutInfo.subtitle} id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideEdit} />
                 </div>
                 <hr />
                 <div className="content-row">

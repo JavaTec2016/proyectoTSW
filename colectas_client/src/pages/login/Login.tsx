@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 export default function Login() {
     const { login } = useAuth();
@@ -9,13 +10,14 @@ export default function Login() {
     const navigate = useNavigate();
     const handleSubmit = async (e:React.SubmitEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        try{
-            await login({username:user, password:pass})
-            navigate('/colectas/categorias');
-        }catch {
-            //alert usuario o contra incorrectos
-            alert('Usuario o contraseña incorrectos')
+        const msg = await login({username:user, password:pass})
+        if(msg.error){
+            console.error(msg.error)
+            toast.error(msg.error.detail);
+            return;
         }
+        toast.success('Bienvenido: ' + user);
+        navigate('/colectas/categorias');
     }
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">

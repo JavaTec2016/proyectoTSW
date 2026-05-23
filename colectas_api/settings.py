@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-s)uw@p22k5l9x^i)+mkm#3=ny17pl9ikm=(80oi5t3398$i65f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -144,7 +144,8 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #CORS SI
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    os.getenv('PROD_ORIGIN', "http://192.168.1.8:5173"),
 ]
 CORS_ALLOW_CREDENTIALS = True
 from corsheaders.defaults import default_headers
@@ -165,6 +166,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+     "DATE_INPUT_FORMATS": ["%Y-%m-%d"],
 }
 
 

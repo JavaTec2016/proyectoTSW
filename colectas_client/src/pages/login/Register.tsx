@@ -4,10 +4,16 @@ import API from '../../api/api';
 function Register() {
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
-    
+    const [touched, setTouched] = useState(false);
     const [passMatch, setPassMatch] = useState(false);
+    const [passError, setPassError] = useState('Las contraseñas no coinciden');
+    const [errored, setErrored] = useState(false);
     function matchPass(matched:string){
+        setPassError('Las contraseñas no coinciden')
+        setTouched(true);
+        setErrored(false);
         setPassMatch(pass == matched);
+        console.log(pass, matched, pass == matched)
     }
     async function submit(e:React.SubmitEvent<HTMLFormElement>){
         e.preventDefault();
@@ -15,8 +21,16 @@ function Register() {
 
         let res = await API.register({username:user, password:pass})
         if(res.error){
-            alert('Error: ' + res.error)
-        }else alert('Registrado exitosamente, puede iniciar sesion')
+            setErrored(true);
+            alert('Error: ' + res.error.detail)
+            const err = (res.error as any).password[0];
+            console.log(err)
+            setPassError(err);
+        }else {
+            setErrored(false);
+            alert('Registrado exitosamente, puede iniciar sesion')
+
+        }
     }
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -32,8 +46,8 @@ function Register() {
                     <label className='form-label'  htmlFor="password">Contraseña: </label>
                     <input className='form-control'  type="text" name='password' id='password' value={pass} onChange={e => setPass(e.target.value)} placeholder='Contraseña'  />
                     <label className='form-label'  htmlFor="passwordConfirm">Confirmar contraseña: </label>
-                    <input className='form-control'  type="text" name='passwordConfirm' id='passwordConfirm' onChange={e => matchPass(e.target.value)} placeholder='Confirmar' />
-                    {passMatch && (<p className='text-danger'>Las contraseñas no coinciden</p>)}
+                    <input className='form-control'  type="text" name='passwordConfirm' id='passwordConfirm' onInput={e => matchPass(e.currentTarget.value)} placeholder='Confirmar' />
+                    {(!passMatch || errored) && touched && (<p className='text-danger'>{passError}</p>)}
                     </div>
                     <br />
                 <input type="submit" value="Registrarse" className="btn btn-primary full-width w-100"/>

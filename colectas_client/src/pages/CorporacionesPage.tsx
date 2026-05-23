@@ -9,7 +9,8 @@ import { clearPrefix } from "../components/forms/FormActions";
 import DetallerPanel from "../components/DetallerPanel";
 import { Nav } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
-
+import type { SideSection } from '../components/layout/Sidebar'
+import Sidebar from '../components/layout/Sidebar'
 
 export function CorporacionesPage() {
     const [hideForm, setHideForm] = useState(true);
@@ -18,7 +19,9 @@ export function CorporacionesPage() {
     const [tableData, setTableData] = useState<{ [x: string]: any }[]>([]);
     const [toggleSearch, setToggleSearch] = useState(false);
     const [hideDetail, setHideDetail] = useState(true);
+    const [hideEdit, setHideEdit] = useState(true);
     const [detailData, setDetailData] = useState<{ [x: string]: any } | null>({})
+    const [collapseSide, setCollapseSide] = useState(true);
     const { accessToken } = useAuth();
     const ENDPOINT = API.CORPORACONES;
     const deleteConfirm = 'Desea ELIMINAR la corporacion? cualquier registro que la utilice tambien sera eliminado.';
@@ -31,6 +34,9 @@ export function CorporacionesPage() {
     const tableColumnNames = ['Nombre', 'Teléfono', 'Correo'];
     const tableHeader = { title: 'Corporaciones'.toUpperCase(), subtitle: 'Registros' };
     const detailHeader = { title: 'Corporacion', subtitle: 'Detalles' };
+     const formPostInfo = {title:'Agregar Corporacion', subtitle:'Ingrese la información'};
+    const formPutInfo = {title:'Actualizar Corporacion', subtitle:'Ingrese la información'};
+
     function detalles(id: string) {
         setHideDetail(false);
         location.href = '#' + 'detalle'
@@ -46,11 +52,12 @@ export function CorporacionesPage() {
         API.getDetail(ENDPOINT, id).then(result => {
             if (result.error) {
                 toast.error(serverErrorMsg);
-                console.error(result.error);
+                console.error(result.error.detail);
                 return;
             }
             setUpdateData(result.data);
             setHideForm(false);
+            setHideEdit(false);
             setUpdateId(id);
         })
     }
@@ -58,12 +65,13 @@ export function CorporacionesPage() {
         confirm(deleteConfirm) ?
             API.delete(ENDPOINT, id).then((res) => {
                 if (res && res.error) {
-                    toast.error(serverErrorMsg);
-                    console.error(res.error);
+                    toast.error(res.error.detail);
+                    console.error(res.error.detail);
                 }
                 else {
                     toast.success(deleteMsg)
-                    searchWith('agregarForm');
+                    if (toggleSearch) searchWith('agregarForm');
+                    else getRegistros();
                 }
             }) : -1;
     }
@@ -75,8 +83,10 @@ export function CorporacionesPage() {
                 console.error(msg.error);
                 return;
             }
+            console.log('Lograo', postMsg)
             toast.success(postMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function actualizar(data: { [x: string]: any }) {
@@ -88,7 +98,8 @@ export function CorporacionesPage() {
                 return;
             }
             toast.success(putMsg)
-            searchWith('agregarForm');
+            if (toggleSearch) searchWith('agregarForm');
+            else getRegistros();
         })
     }
     function searchWith(formId: string) {
@@ -98,18 +109,16 @@ export function CorporacionesPage() {
     }
     async function getRegistros(filtros: { [x: string]: any } = {}) {
         API.get(ENDPOINT, filtros).then(regs => {
-            if(regs.error){
-                return
-            }
-            console.log(regs)
-            setTableData(regs.data!);
+            setTableData(regs.data);
         });
+
     }
-    function ontoggle(state:boolean){
+    function ontoggle(state: boolean) {
         setToggleSearch(state);
-        if(!state) getRegistros();
+        if (!state) getRegistros();
         else searchWith('agregarForm');
     }
+
     useEffect(() => {
         if (!API.accessToken) return;
         console.log('AUTH TOKEN: ', API.accessToken)
@@ -119,18 +128,18 @@ export function CorporacionesPage() {
     return (
         <div className="app-shell">
 
-            <Navigation>
+            <Navigation includeSidebar={true} onSideToggle={() => setCollapseSide(!collapseSide)}>
                 <Nav>
-                <Nav.Link href="#top">Inicio</Nav.Link>
-                <Nav.Link href="/colectas">Colectas</Nav.Link>
+                    <Nav.Link href="#top">Inicio</Nav.Link>
+                    <Nav.Link href="/colectas">Colectas</Nav.Link>
                 </Nav>
             </Navigation>
-            <Breadcrumb path="/colectas/corporaciones" />
 
+            <Breadcrumb path="/colectas/corporaciones" />
             <main className="page-content">
                 <div className="content-row">
 
-                    <CorporacionForm id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
+                    <CorporacionForm title={formPostInfo.title} subtitle={formPostInfo.subtitle} id="agregarForm" onSubmit={agregar} autofill={{}} onchange={() => {
                         console.log(toggleSearch)
                         if (!toggleSearch) return;
                         searchWith('agregarForm')
@@ -141,7 +150,11 @@ export function CorporacionesPage() {
                             onDelete={eliminar} onDetail={detalles} onEdit={setModal} headerData={tableHeader} />
 
                     </div>
-                    <CorporacionForm id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideForm} />
+
+                </div>
+                <hr />
+                <div className="content-row">
+                    <CorporacionForm closable={true} setHidden={setHideEdit} id="editarForm" onSubmit={actualizar} autofill={updateData} hidden={hideEdit} />
                 </div>
                 <hr />
                 <div className="content-row">

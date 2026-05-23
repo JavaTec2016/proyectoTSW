@@ -1,6 +1,7 @@
 import { Navigation } from '../components/Navigation'
 import { Nav, Navbar } from 'react-bootstrap'
 import { EventoCard } from '../components/landing/TipoEventoCard'
+
 function LandingPage() {
   return (
     <div className='app-shell'>
@@ -49,15 +50,18 @@ function LandingPage() {
                 <h3 className='pt-4'>Eventos:</h3>
               </div>
             </div>
-            <div className="pb-4 pt-4 align-items-center" style={{ overflowX: 'auto' }}>
-              <div className="d-flex pb-4 pt-3 justify-content-center">
+            <div className="row pb-4 pt-3 justify-content-center">
+              <div className='col-md-4'>
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Fonotones' title='Fonotones' body='Lorem Ipsum Fonotonium'
-                  badges={['Evento de recaudacion']} style={{ width: '28rem', margin: '2rem 2rem' }}></EventoCard>
+                  badges={['Evento de recaudacion']} style={{ width: '100%', margin: '2rem 0rem' }}></EventoCard>
+              </div>
+              <div className='col-md-4'>
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Festivales' title='Festivales' body='Lorem Ipsum Festivaldo'
-                  badges={['Evento de recaudacion']} style={{ width: '28rem', margin: '2rem 2rem' }}></EventoCard>
+                  badges={['Evento de recaudacion']} style={{ width: '100%', margin: '2rem 0rem' }}></EventoCard>
+              </div>
+              <div className='col-md-4'>
                 <EventoCard imgSource="../assets/img/c carros 8k.png" alt='Reuniones' title='Reuniones' body='Lorem Ipsum Reunionam'
-                  badges={['Evento de recaudacion']} style={{ width: '28rem', margin: '2rem 2rem' }}></EventoCard>
-
+                  badges={['Evento de recaudacion']} style={{ width: '100%', margin: '2rem 0rem' }}></EventoCard>
               </div>
             </div>
           </div>

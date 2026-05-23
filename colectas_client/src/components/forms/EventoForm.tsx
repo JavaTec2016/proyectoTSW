@@ -18,15 +18,20 @@ function EventoForm({
     onSubmit,
     autofill,
     hidden = false,
+    setHidden = (val: boolean) => { },
     onchange = () => { },
+    closable = false,
 }: {
     id: string;
-    title?:string;
-    subtitle?:string;
+    title?: string;
+    subtitle?: string;
     onSubmit: (data: { [x: string]: any }) => any;
     autofill: { [x: string]: any };
     hidden?: boolean;
+    setHidden?: (val: boolean) => any,
     onchange?: () => any;
+
+    closable?: boolean,
 }) {
     const {
         register,
@@ -76,9 +81,14 @@ function EventoForm({
 
     return (
         <Form onSubmit={submit} hidden={hidden} className="form-panel" id={id}>
-            <div className="panel-header">
-                <p className="panel-title">{title || "Informacion del Evento"}</p>
-                <p className="panel-subtitle">{subtitle}</p>
+            <div className="panel-header justify-content-between">
+                <div>
+                    <p className="panel-title">{title || "Informacion del Evento"}</p>
+                    <p className="panel-subtitle">{subtitle}</p>
+                </div>
+                {closable && (
+                    <button className='btn panel-close' type="button" onClick={() => { setHidden(true) }}>X</button>
+                )}
             </div>
 
             <div className="panel-divider"></div>
@@ -105,7 +115,7 @@ function EventoForm({
                         validation={validation}
                         onInput={onchange} />
 
-                        <FormField
+                    <FormField
                         formId={id}
                         inputId="fecha_fin"
                         type="date"
@@ -119,7 +129,7 @@ function EventoForm({
                     <FormSelectField
                         formId={id}
                         inputId="tipo"
-                        options={{'':'Seleccionar...', 'fonoton':'Fonoton', 'festival':'Festival', 'reunion':'Reunion'/**placeholder */}}
+                        options={{ '': 'Seleccionar...', 'fonoton': 'Fonoton', 'festival': 'Festival', 'reunion': 'Reunion'/**placeholder */ }}
                         label="Tipo de evento: "
                         register={register}
                         errors={errors}
