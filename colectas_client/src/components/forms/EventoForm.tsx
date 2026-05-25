@@ -7,7 +7,7 @@ import { printErrors } from "./printErrors";
 import { useEffect } from "react";
 import { Form, FormControl, FormLabel } from "react-bootstrap";
 import { limpiar, clearPrefix, inputName } from "./FormActions";
-import FormField from "./FormField";
+import FormInput from "./FormInput";
 import FormTextArea from "./FormTextArea";
 import FormSelectField from "./FormSelectField";
 
@@ -94,7 +94,7 @@ function EventoForm({
             <div className="panel-divider"></div>
             <div className="form-scroll">
                 <div className="form-row">
-                    <FormField
+                    <FormInput
                         formId={id}
                         inputId="nombre"
                         type="text"
@@ -105,7 +105,7 @@ function EventoForm({
                         onInput={onchange} />
                 </div>
                 <div className="form-row">
-                    <FormField
+                    <FormInput
                         formId={id}
                         inputId="fecha_inicio"
                         type="date"
@@ -115,7 +115,7 @@ function EventoForm({
                         validation={validation}
                         onInput={onchange} />
 
-                    <FormField
+                    <FormInput
                         formId={id}
                         inputId="fecha_fin"
                         type="date"

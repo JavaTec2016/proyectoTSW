@@ -95,7 +95,7 @@ class CookieLoginView(TokenObtainPairView):
             res.set_cookie(
                 key='refresh_token',
                 value=refresh_token,
-                httponly=False,
+                httponly=True,
                 secure=settings.COOKIE_SECURE,
                 samesite=settings.COOKIE_SAMESITE,
                 max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'], #7 dias
@@ -139,7 +139,7 @@ class CookieRefreshView(TokenRefreshView):
                 response.set_cookie(
                     key='refresh_token',
                     value=new_refresh,
-                    httponly=False,
+                    httponly=True,
                     secure=settings.COOKIE_SECURE,
                     samesite=settings.COOKIE_SAMESITE,
                     max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'], #7 dias
