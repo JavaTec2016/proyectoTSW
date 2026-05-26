@@ -4,21 +4,21 @@ import type { FieldErrors, FieldValues, RegisterOptions, UseFormRegister } from 
 import FormSelectField from './FormSelectField';
 import FormTextArea from './FormTextArea';
 export type FormInputConfig = {
-    __name: 'input';
+    name: 'input';
     type: React.HTMLInputTypeAttribute;
     label:string;
 }
 export type FormSelectConfig = {
-    __name: 'select';
+    name: 'select';
     label:string;
     options: {[x:string]:any}
 }
 export type FormTextAreaConfig = {
-    __name: 'textarea';
+    name: 'textarea';
     label:string;
 }
 function FormField({ formId, id, register, errors, validation, onChange, config }: { formId: string, id: string, config: FormInputConfig | FormSelectConfig | FormTextAreaConfig, register: UseFormRegister<FieldValues>, errors: FieldErrors<FieldValues>, validation: { [x: string]: RegisterOptions }, onChange: () => any }) {
-    if (config.__name.toLowerCase() == 'input'){
+    if (config.name.toLowerCase() == 'input'){
         const conf = config as FormInputConfig;
         return (
             <FormInput
@@ -32,7 +32,7 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 onInput={onChange} />
         )
     }
-    if(config.__name == 'select'){
+    if(config.name == 'select'){
         const conf = config as FormSelectConfig;
         return (
             <FormSelectField
@@ -46,7 +46,7 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 onInput={onChange} />
         )
     }
-    if(config.__name == 'textarea'){
+    if(config.name == 'textarea'){
         const conf = config as FormTextAreaConfig;
         return (
             <FormTextArea
@@ -59,7 +59,7 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 onInput={onChange} />
         )
     }
-    return <div className='text text-danger'>Input desconocido: {id + ": "+ config.__name}</div>
+    return <div className='text text-danger'>Input desconocido: {id + ": "+ config.name}</div>
 }
 
 export default FormField

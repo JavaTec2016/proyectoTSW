@@ -84,7 +84,7 @@ function Donador_CategoriaForm({
         className="btn-primary-custom"
         value="Guardar registro"
       ></input>
-      <button className="btn-secondary-custom" onClick={() => limpiar(id)}>
+      <button className="btn-secondary-custom" type='button' role='button' onClick={() => limpiar(id)}>
         Limpiar campos
       </button>
     </Form>

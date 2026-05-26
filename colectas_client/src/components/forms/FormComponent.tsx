@@ -1,39 +1,42 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm, type RegisterOptions } from 'react-hook-form';
-import { clearPrefix, inputName } from './FormActions';
-import { Form, FormLabel } from 'react-bootstrap';
+import { clearPrefix, inputName, limpiar } from './FormActions';
+import { Form } from 'react-bootstrap';
 import type { FormInputConfig, FormSelectConfig, FormTextAreaConfig } from './FormField';
 import FormField from './FormField';
-type FormPresentation = {
+
+export type FormPresentation = {
     title: string;
     subtitle: string;
 }
-type FormBody = {
-    [x:string]:any;
-    field:string;
+export type FormRows = {
+    [x: string]: any;
+    field: string;
     config: FormInputConfig | FormSelectConfig | FormTextAreaConfig;
-}[]
+}[][]
+export type FormValidators = { [x: string]: RegisterOptions };
+export type FormComponentAttributes = {
+    id: string;
+    presentation: FormPresentation;
+    onSubmit: (data: { [x: string]: any }) => any;
+    values?: { [x: string]: any };
+    hidden?: boolean;
+    onchange?: () => any;
+    onClose?: () => any;
+    validators: FormValidators;
+    body: FormRows;
+}
 function FormComponent({
     id,
     presentation,
     onSubmit,
-    values,
+    values = {},
     hidden = false,
     onchange = () => { },
     onClose,
     validators,
     body,
-}: {
-    id: string;
-    presentation: FormPresentation;
-    onSubmit: (data: { [x: string]: any }) => any;
-    values: { [x: string]: any };
-    hidden?: boolean;
-    onchange?: () => any;
-    onClose?: () => any;
-    validators: { [x: string]: RegisterOptions };
-    body: FormBody;
-}) {
+}: FormComponentAttributes) {
     const {
         register,
         handleSubmit,
@@ -64,24 +67,38 @@ function FormComponent({
             </div>
             <div className="panel-divider"></div>
             <div className="form-scroll">
-                {body.map((row, index)=>{
-                    const fieldId = inputName(id, row.field);
+                {body.map((row, index) => {
+                    //
                     return (
-                    <div className='form-row' key={index}>
-                        <div className='form-group' key={fieldId}>
-                            <FormField
-                                formId={id}
-                                id={row.field}
-                                config={row.config}
-                                register={register}
-                                errors={errors}
-                                validation={validators}
-                                onChange={onchange} />
+                        <div className='form-row' key={index}>
+                            {row.map(field => {
+                                const fieldId = inputName(id, field.field);
+                                return (
+                                    <div className='form-group' key={fieldId}>
+                                        <FormField
+                                            formId={id}
+                                            id={field.field}
+                                            config={field.config}
+                                            register={register}
+                                            errors={errors}
+                                            validation={validators}
+                                            onChange={onchange} />
+                                    </div>
+                                )
+                            })}
+
                         </div>
-                    </div>
                     )
                 })}
             </div>
+            <input
+                type="submit"
+                className="btn-primary-custom"
+                value="Guardar registro"
+            ></input>
+            <button className="btn-secondary-custom" type='button' role='button' onClick={() => limpiar(id)}>
+                Limpiar campos
+            </button>
         </Form>
     )
 }

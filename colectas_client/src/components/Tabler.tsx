@@ -17,7 +17,13 @@ import TableHeader from "./TableHeader";
 import TableBodier from "./TableBodier";
 import { makeDatatableColumns } from "./forms/FormActions";
 import { makeColumns, type SlotConfigs } from "./TableActions";
-export function Tabler({ data, columns, columNames, primaryField, onDetail, onEdit, onDelete, onSearchToggle=()=>{}, headerData }: { data: { [x: string]: any }[], columns: string[], columNames: string[], primaryField: string, onDetail: (id: string) => any, onEdit: (id: string) => any, onDelete: (id: string) => any, onSearchToggle?:(state:boolean)=>any, headerData:{title:string, subtitle:string} }) {
+
+export type TablePresentation = {
+    title:string;
+    subtitle:string;
+}
+
+export function Tabler({ data, columns, columNames, primaryField, onDetail, onEdit, onDelete, onSearchToggle=()=>{}, headerData }: { data: { [x: string]: any }[], columns: string[], columNames: string[], primaryField: string, onDetail: (id: string) => any, onEdit: (id: string) => any, onDelete: (id: string) => any, onSearchToggle?:(state:boolean)=>any, headerData:TablePresentation }) {
     const [listing, setListing] = useState<{ [x: string]: any }[]>([])
     const [sorting, setSorting] = useState<SortingState>([]);
     async function load() {

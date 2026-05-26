@@ -3,13 +3,13 @@ import type { data } from "react-router-dom"
 type paramsObject = {
     [k in string]: string | number | null
 }
-
+type APIResponse = Promise<{[x:string]:any, data?:any, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>;
 class API {
 
     //direccion
     static __local = 'http://192.168.1.8:8000'
     static __prod = 'https://proyectotsw.onrender.com'
-    static ROOT = this.__prod;
+    static ROOT = this.__local;
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     
@@ -75,7 +75,7 @@ class API {
      * @param auth habilitar autenticacion (si)
      * @returns objeto con los datos del response, o datos del error si truena
      */
-    static async request(url:string, method:'POST'|'GET'|'PUT'|'DELETE'|'HEAD', body?:{[x:string]:any} | null, auth = this.auth):Promise<{[x:string]:any, data?:any, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>{
+    static async request(url:string, method:'POST'|'GET'|'PUT'|'DELETE'|'HEAD', body?:{[x:string]:any} | null, auth = this.auth):APIResponse{
         
         let headers:{[x:string]:string} = {'Content-Type':'application/json'}
         if(auth){ //saca el token de algun lado
@@ -146,6 +146,18 @@ class API {
     static async refresh(){
         let urlFinal = this.getUrl(this.REFRESH);
         return await this.request(urlFinal, 'POST', {});
+    }
+    static async getData(response:APIResponse){
+        return (await response).data;
+    }
+    static async getError(response:APIResponse){
+        return (await response).error;
+    }
+    static async getHeaders(respose:APIResponse){
+        return (await respose).headers;
+    }
+    static async getStatus(response:APIResponse){
+        return (await response).status;
     }
 }
 API.init()
