@@ -1,19 +1,9 @@
 import API from "../api/api";
-import CorporacionForm from "../components/forms/CorporacionForm";
-import { Tabler } from "../components/Tabler";
-import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
 import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
-import { clearPrefix } from "../components/forms/FormActions";
-import DetallerPanel from "../components/DetallerPanel";
 import { Nav } from "react-bootstrap";
-import { useAuth } from "../context/AuthContext";
-import type { SideSection } from '../components/layout/Sidebar'
-import Sidebar from '../components/layout/Sidebar'
 import type { CrudComponentAttributes } from "../components/CrudComponent";
 import type { FormRows } from "../components/forms/FormComponent";
-import type { email } from "react-admin";
 import CrudComponent from "../components/CrudComponent";
 
 //========SETUP

@@ -42,7 +42,7 @@ function Sidebar({collapsed, layout=navItems}:{collapsed:boolean, layout?:SideSe
 
         <nav>
             <div className=" d-flex justify-content-center">
-                <img src= "/public/assets/img/profile.webp" alt="" width={'50%'}/>
+                <img src= "../assets/img/profile.webp" alt="" width={'50%'}/>
             </div>
             <div className="d-flex w-100 justify-content-center align-items-center gap-2">
                 <p className="fs-2">{user}</p>

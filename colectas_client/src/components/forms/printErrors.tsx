@@ -10,3 +10,13 @@ export function printErrors(error: ErrorOption) {
         </div>
     );
 }
+
+export function printCustomErrors(errors:string[]){
+    return (
+        <div>
+            {errors.map((text, idx) => (
+                <p key={idx} className="text-danger">{text}</p>
+            ))}
+        </div>
+    )
+}

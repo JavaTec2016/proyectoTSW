@@ -16,6 +16,18 @@ class EventoSerializer(serializers.ModelSerializer):
         model = Evento
         fields = '__all__'
 
+    def validate(self, attrs):
+        fecha_inicio = attrs.get('fecha_inicio')
+        fecha_fin = attrs.get('fecha_fin')
+        if self.instance:
+            fecha_inicio = fecha_inicio or self.instance.fecha_inicio
+            fecha_fin = fecha_fin or self.instance.fecha_fin
+        
+        if fecha_inicio and fecha_fin and fecha_fin < fecha_inicio:
+            raise serializers.ValidationError(detail={'fecha_fin':'lesser_than_fecha_inicio'}, code=400)
+        
+        return super().validate(attrs)
+
 class UserioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Userio

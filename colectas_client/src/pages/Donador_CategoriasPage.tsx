@@ -1,14 +1,7 @@
 import API from "../api/api";
-import Donador_CategoriaForm from "../components/forms/Donador_CategoriaForm";
-import { Tabler } from "../components/Tabler";
-import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
 import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
-import { clearPrefix } from "../components/forms/FormActions";
-import DetallerPanel from "../components/DetallerPanel";
-import { Nav, ToastContainer } from "react-bootstrap";
-import { useAuth } from "../context/AuthContext";
+import { Nav } from "react-bootstrap";
 import CrudComponent, { type CrudComponentAttributes } from "../components/CrudComponent";
 import type { FormRows } from "../components/forms/FormComponent";
 

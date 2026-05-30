@@ -1,17 +1,11 @@
 import API from "../api/api";
-import { Tabler } from "../components/Tabler";
-import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
 import { Navigation } from "../components/Navigation";
 import Breadcrumb from "../components/Breadcrumb";
-import { clearPrefix } from "../components/forms/FormActions";
-import DetallerPanel from "../components/DetallerPanel";
-import { Nav, ToastContainer } from "react-bootstrap";
-import DetallerFields from "../components/DetallerFields";
-import EventoForm from "../components/forms/EventoForm";
 import type { CrudComponentAttributes } from "../components/CrudComponent";
 import type { FormRows } from "../components/forms/FormComponent";
 import CrudComponent from "../components/CrudComponent";
+import { Nav } from "react-bootstrap";
+import type { CustomValidatorSchema } from "../components/forms/FormActions";
 
 //========SETUP
 
@@ -133,6 +127,15 @@ const crudAttributes: CrudComponentAttributes = {
     },
     serverErrorMessage: 'Error del servidor, intentelo mas tarde'
 }
+const customValidationSchema: CustomValidatorSchema = {
+    'fecha_fin':{
+        'lesser_than_fecha_inicio': (data)=>{
+            const fin = Date.parse(data['fecha_fin']);
+            const inicio = Date.parse(data['fecha_inicio'])
+            if(fin < inicio) return 'La fecha de fin no puede ser antes de la fecha de inicio'
+        }
+    }
+}
 export function EventosPage() {
     return (
         <div className="app-shell">
@@ -147,6 +150,7 @@ export function EventosPage() {
             <main className="page-content">
                 <CrudComponent
                     attributes={crudAttributes}
+                    customValidatorSchema={customValidationSchema}
                 />
             </main>
         </div>

@@ -1,24 +1,34 @@
 import React from 'react'
 import FormInput from './FormInput';
-import type { FieldErrors, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
+import type { ErrorOption, FieldErrors, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
 import FormSelectField from './FormSelectField';
 import FormTextArea from './FormTextArea';
+import type { CustomValidatorResults } from './FormActions';
+import { printCustomErrors, printErrors } from './printErrors';
 export type FormInputConfig = {
     name: 'input';
     type: React.HTMLInputTypeAttribute;
-    label:string;
+    label: string;
 }
 export type FormSelectConfig = {
     name: 'select';
-    label:string;
-    options: {[x:string]:any}
+    label: string;
+    options: { [x: string]: any }
 }
 export type FormTextAreaConfig = {
     name: 'textarea';
-    label:string;
+    label: string;
 }
-function FormField({ formId, id, register, errors, validation, onChange, config }: { formId: string, id: string, config: FormInputConfig | FormSelectConfig | FormTextAreaConfig, register: UseFormRegister<FieldValues>, errors: FieldErrors<FieldValues>, validation: { [x: string]: RegisterOptions }, onChange: () => any }) {
-    if (config.name.toLowerCase() == 'input'){
+function FormField({ formId, id, register, errors, validation, customValidation = {}, onChange, config }: { formId: string, id: string, config: FormInputConfig | FormSelectConfig | FormTextAreaConfig, register: UseFormRegister<FieldValues>, errors: FieldErrors<FieldValues>, validation: { [x: string]: RegisterOptions }, customValidation: CustomValidatorResults, onChange: () => any }) {
+    function printAllErrors() {
+        return (
+            <div>
+                {errors[id] && errors[id]!.types && printErrors(errors[id] as ErrorOption)}
+                {customValidation[id] && printCustomErrors(customValidation[id])}
+            </div>
+        )
+    }
+    if (config.name.toLowerCase() == 'input') {
         const conf = config as FormInputConfig;
         return (
             <FormInput
@@ -27,12 +37,13 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 type={conf.type}
                 label={conf.label}
                 register={register}
-                errors={errors}
                 validation={validation}
-                onInput={onChange} />
+                onInput={onChange}
+                customErrors={printAllErrors()}
+                />
         )
     }
-    if(config.name == 'select'){
+    if (config.name == 'select') {
         const conf = config as FormSelectConfig;
         return (
             <FormSelectField
@@ -41,12 +52,13 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 options={conf.options}
                 label={conf.label}
                 register={register}
-                errors={errors}
                 validation={validation}
-                onInput={onChange} />
+                onInput={onChange}
+                customErrors={printAllErrors()}
+                />
         )
     }
-    if(config.name == 'textarea'){
+    if (config.name == 'textarea') {
         const conf = config as FormTextAreaConfig;
         return (
             <FormTextArea
@@ -54,12 +66,13 @@ function FormField({ formId, id, register, errors, validation, onChange, config 
                 inputId={id}
                 label={conf.label}
                 register={register}
-                errors={errors}
                 validation={validation}
-                onInput={onChange} />
+                onInput={onChange}
+                customErrors={printAllErrors()}
+                />
         )
     }
-    return <div className='text text-danger'>Input desconocido: {id + ": "+ config.name}</div>
+    return <div className='text text-danger'>Input desconocido: {id + ": " + config.name}</div>
 }
 
 export default FormField

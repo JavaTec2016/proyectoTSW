@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import type { FormPresentation, FormRows, FormValidators } from './forms/FormComponent';
 import { Tabler, type TablePresentation } from './Tabler';
 import API from '../api/api';
-import { clearPrefix, inputName } from './forms/FormActions';
+import { clearPrefix, customValidate, inputName, type CustomValidatorResults, type CustomValidatorSchema } from './forms/FormActions';
 import toast from 'react-hot-toast';
 import FormComponent from './forms/FormComponent';
 import DetallerPanel, { type DetallerPresentation } from './DetallerPanel';
@@ -50,7 +50,7 @@ function rebuildValidators(formId:string, validators:FormValidators){
     return out;
 }
 
-function CrudComponent({attributes}: {attributes:CrudComponentAttributes}) {
+function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:CrudComponentAttributes, customValidatorSchema?: CustomValidatorSchema}) {
 
     const [updateValues, setUpdateValues] = useState({});
     const [updateId, setUpdateId] = useState<any>(null);
@@ -133,6 +133,9 @@ function CrudComponent({attributes}: {attributes:CrudComponentAttributes}) {
         const data = await API.getData(API.get(attributes.endpoint, filtros));
         setTableData(data);
     }
+    //===validacion custom
+
+    
 
     //===AUTO BUSQUEDA
 
@@ -179,6 +182,7 @@ function CrudComponent({attributes}: {attributes:CrudComponentAttributes}) {
                     onchange={createChanged}
                     body={attributes.formRows}
                     validators={rebuildValidators(createFormId, attributes.validators)}
+                    customValidatorSchema={customValidatorSchema}
                 ></FormComponent>
 
                 <div className='table-panel'>
@@ -207,6 +211,7 @@ function CrudComponent({attributes}: {attributes:CrudComponentAttributes}) {
                     values={updateValues}
                     onClose={closeUpdate}
                     hidden={hideUpdateForm}
+                    customValidatorSchema={customValidatorSchema}
                 ></FormComponent>
             </div>
 

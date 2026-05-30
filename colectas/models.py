@@ -1,6 +1,7 @@
 from django.utils import timezone
 
 from django.db import models
+from django.db.models import CheckConstraint, Q, F
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Corporacion(models.Model):
@@ -23,10 +24,18 @@ class Donador_Categoria(models.Model):
 
 class Evento(models.Model):
     nombre = models.CharField(max_length=100)
-    fecha_inicio = models.DateTimeField()
-    fecha_fin = models.DateTimeField()
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
     tipo = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=1000)
+
+    class Meta:
+        constraints = [
+            CheckConstraint(
+                condition=Q(fecha_fin__gte=F('fecha_inicio')),
+                name='check_fecha_fin'
+            )
+        ]
 
 class Voluntario(models.Model):
     nombre = models.CharField(max_length=100)

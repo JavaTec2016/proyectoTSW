@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, type RegisterOptions } from 'react-hook-form';
-import { clearPrefix, inputName, limpiar } from './FormActions';
+import { clearPrefix, customValidate, inputName, limpiar, type CustomValidatorResults, type CustomValidatorSchema } from './FormActions';
 import { Form } from 'react-bootstrap';
 import type { FormInputConfig, FormSelectConfig, FormTextAreaConfig } from './FormField';
 import FormField from './FormField';
@@ -25,6 +25,7 @@ export type FormComponentAttributes = {
     onClose?: () => any;
     validators: FormValidators;
     body: FormRows;
+    customValidatorSchema?: CustomValidatorSchema,
 }
 function FormComponent({
     id,
@@ -35,6 +36,7 @@ function FormComponent({
     onchange = () => { },
     onClose,
     validators,
+    customValidatorSchema = {},
     body,
 }: FormComponentAttributes) {
     const {
@@ -43,11 +45,21 @@ function FormComponent({
         formState: { errors },
         setValue,
     } = useForm({ criteriaMode: "all" });
+    const [customValidation, setCustomValidation] = useState<CustomValidatorResults>({})
 
     const submit = handleSubmit((data) => {
+        if(!verifyCustomValidation()) return;
         const cleared = clearPrefix(data);
         onSubmit(cleared);
     });
+
+    function validate(){
+        if(!customValidatorSchema) return;
+        setCustomValidation(customValidate(customValidatorSchema, id));
+    }
+    function verifyCustomValidation(){
+        return Object.keys(customValidation).length == 0;
+    }
     useEffect(() => {
         if (values.id) delete values.id;
         for (const field in values) {
@@ -82,7 +94,8 @@ function FormComponent({
                                             register={register}
                                             errors={errors}
                                             validation={validators}
-                                            onChange={onchange} />
+                                            customValidation={customValidation}
+                                            onChange={() => {validate(); onchange()}} />
                                     </div>
                                 )
                             })}

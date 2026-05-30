@@ -3,6 +3,7 @@ import type { data } from "react-router-dom"
 type paramsObject = {
     [k in string]: string | number | null
 }
+type APIErrorResponse = {}
 type APIResponse = Promise<{[x:string]:any, data?:any, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>;
 class API {
 

@@ -1,4 +1,12 @@
-export const ID_SPLIT = '@'
+export type CustomValidatorSchema = {
+  [x:string]:{
+    [x:string]:CustomValidator;
+  }
+}
+export type CustomValidator = (formValues:{[x:string]:any}) => string | null | void;
+export type CustomValidatorResults = {[x:string]:string[]}
+
+export const ID_SPLIT = '@';
 export function limpiar(id:string) {
   const form = new FormData(document.getElementById(id)! as HTMLFormElement);
   form.forEach((entry, key) => {
@@ -31,4 +39,22 @@ export function makeDatatableColumns(...cols:string[]){
     columns.push({data:col})
   })
   return columns;
+}
+
+export function customValidate(schema:CustomValidatorSchema, formId:string){
+  const failures:CustomValidatorResults = {};
+  const formData = extraer(document.getElementById(formId) as HTMLFormElement);
+  //validar todos los datos que tengan custom validators
+  for(const field in formData){
+    const callbacks = schema[field];
+    if(!callbacks) continue;
+
+    Object.values(callbacks).forEach(callback=>{ //apilar errores del campo, o no si no hay
+      let error = callback(formData);
+      if(!error) return;
+      if(!(field in failures)) failures[field] = [];
+      failures[field].push(error);
+    })
+  }
+  return failures;
 }
