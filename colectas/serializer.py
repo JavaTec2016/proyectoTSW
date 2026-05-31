@@ -95,7 +95,7 @@ class ClaseDisplaySerializer(serializers.ModelSerializer):
 class UserioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Userio
-        fiels = '__all__'
+        fields = '__all__'
     
     def create(self, validated_data):
         usr = Userio.objects.create_user(**validated_data)

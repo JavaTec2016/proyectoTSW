@@ -82,7 +82,8 @@ class UserioView(viewsets.ModelViewSet):
     serializer_class = UserioSerializer
     queryset = Userio.objects.all()
     filter_backends = [DjangoFilterBackend]
-    
+    filterset_class = UserioFilter
+    permission_classes = [AllowAny]
 
 #==========AUTENTICACION
 

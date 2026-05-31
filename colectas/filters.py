@@ -61,3 +61,11 @@ class ClaseFilter(django_filters.FilterSet):
     class Meta:
         model = Clase
         fields = ['anio_graduacion']
+
+class UserioFilter(django_filters.FilterSet):
+    username = django_filters.CharFilter(lookup_expr='icontains')
+    rol = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Userio
+        fields = ['username']
