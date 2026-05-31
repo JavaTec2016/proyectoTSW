@@ -10,7 +10,7 @@ class API {
     //direccion
     static __local = 'http://192.168.1.8:8000'
     static __prod = 'https://proyectotsw.onrender.com'
-    static ROOT = this.__local;
+    static ROOT = this.__prod;
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     
@@ -23,6 +23,7 @@ class API {
     static EVENTOS = 'eventos/'
     static DONADORES = 'donadores/'
     static CLASES = 'clases/'
+    static USUARIOS = 'usuarios/'
     static DONADORES_DISPLAY = 'donadores/display/'
     static REGISTRAR = 'auth/registrar/'
     static LOGIN = 'auth/login/'
@@ -42,6 +43,7 @@ class API {
         .add(this.EVENTOS)
         .add(this.DONADORES)
         .add(this.CLASES)
+        .add(this.USUARIOS)
 
         .add(this.CATEGORIAS_DISPLAY)
         .add(this.CORPORACONES_DISPLAY)

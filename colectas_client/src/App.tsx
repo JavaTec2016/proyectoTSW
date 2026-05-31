@@ -13,6 +13,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import DonadoresPage from './pages/DonadoresPage';
+import ClasesPage from './pages/ClasesPage';
+import UsuariosPage from './pages/UsuariosPage';
 const router = createBrowserRouter([
   //rutas token
   {
@@ -23,12 +25,13 @@ const router = createBrowserRouter([
       {path:'corporaciones', element:<CorporacionesPage />},
       {path:'eventos', element:<EventosPage />},
       {path:'donadores', element:<DonadoresPage />},
+      {path:'clases', element:<ClasesPage />},
     ]
   },
   {
     path:'/admin', element:<ProtectedRoute />,
     children:[
-      {path:'dashboard', element:<Dashboard />}
+      {path:'dashboard', element:<UsuariosPage />}
     ]
   },
   //rutas publicas

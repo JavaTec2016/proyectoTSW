@@ -145,7 +145,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #CORS SI
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    os.getenv('PROD_ORIGIN', "http://192.168.1.8:5173"),
+    "http://192.168.1.8:5173",
+    os.getenv('PROD_ORIGIN'),
 ]
 CORS_ALLOW_CREDENTIALS = True
 from corsheaders.defaults import default_headers

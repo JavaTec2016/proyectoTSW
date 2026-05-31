@@ -1,7 +1,29 @@
 import React from 'react'
 
 function Dashboard() {
-    const content = `
+  /**
+  return (
+    <body className="layout-fixed sidebar-expand-lg bg-body-tertiary">
+      <div className="app-wrapper">
+
+        <nav className="app-header navbar navbar-expand bg-body">
+            
+      <div className="container-fluid">
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <a className="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <i className="bi bi-list"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+        </nav>
+
+      </div>
+    </body>
+  )
+   */
+  const content = `
     <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <div class="app-wrapper">
 
@@ -69,7 +91,7 @@ function Dashboard() {
     
     `
   return (
-    <div dangerouslySetInnerHTML={{__html:content}}></div>
+    <div dangerouslySetInnerHTML={{ __html: content }}></div>
   )
 }
 
