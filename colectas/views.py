@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 
 from colectas.filters import *
+from colectas.recaptcha import PROJECT_ID, SITEKEY, create_assessment
 from .models import *
 from .serializer import *
 from rest_framework.decorators import api_view, permission_classes
@@ -119,6 +120,12 @@ class LogoutView(APIView):
 
 class CookieLoginView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
+        print(str(request.data))
+        token = request.data.get('grecaptchatoken')
+        #if token:
+            #assess = create_assessment(project_id=PROJECT_ID, recaptcha_key=SITEKEY, token=token, recaptcha_action='LOGIN')
+            #print(assess)
+
         res = super().post(request, *args, **kwargs)
         if res.status_code == 200:
             refresh_token = res.data.pop('refresh')
