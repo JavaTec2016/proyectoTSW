@@ -52,7 +52,7 @@ export function customValidate(schema:CustomValidatorSchema, formId:string){
     if(!callbacks) continue;
 
     Object.values(callbacks).forEach(callback=>{ //apilar errores del campo, o no si no hay
-      let error = callback(formData);
+      let error = callback((formData));
       if(!error) return;
       if(!(field in failures)) failures[field] = [];
       failures[field].push(error);

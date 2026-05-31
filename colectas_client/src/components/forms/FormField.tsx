@@ -21,11 +21,13 @@ export type FormTextAreaConfig = {
 }
 function FormField({ formId, id, register, errors, validation, customValidation = {}, onChange, config }: { formId: string, id: string, config: FormInputConfig | FormSelectConfig | FormTextAreaConfig, register: UseFormRegister<FieldValues>, errors: FieldErrors<FieldValues>, validation: { [x: string]: RegisterOptions }, customValidation: CustomValidatorResults, onChange: () => any }) {
     function printAllErrors() {
+        
         const ide = inputName(formId, id);
+        console.log(customValidation)
         return (
             <div>
                 {errors[ide] && errors[ide]!.types && printErrors(errors[ide] as ErrorOption)}
-                {customValidation[ide] && printCustomErrors(customValidation[ide])}
+                {customValidation[id] && printCustomErrors(customValidation[id])}
             </div>
         )
     }

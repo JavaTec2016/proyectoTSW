@@ -33,7 +33,7 @@ const formConfig: FormRows = [
         }
     }],
     [{
-        field: 'fecha_fin',
+        field: 'telefono',
         config: {
             name: 'input',
             type: 'number',

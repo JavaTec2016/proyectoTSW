@@ -116,7 +116,7 @@ function FormComponent({
             ></input>
             
 
-            <button className="btn-secondary-custom" type='button' role='button' onClick={() => limpiar(id)}>
+            <button className="btn-secondary-custom" type='button' role='button' onClick={() => {limpiar(id); setCustomValidation({})}}>
                 Limpiar campos
             </button>
         </Form>

@@ -40,12 +40,13 @@ export default function Login() {
     const navigate = useNavigate();
     const handleSubmit = async (e:React.SubmitEvent<HTMLFormElement>) =>{
         e.preventDefault();
-
+        (document.getElementById('btnIngresar') as HTMLInputElement).value = 'Autenticando...'
         const grecaptchaToken = window.grecaptcha.enterprise.getResponse(
             widgetIdRef.current ?? undefined
         )
         if(!grecaptchaToken){
             toast.error('Complete el captcha');
+            (document.getElementById('btnIngresar') as HTMLInputElement).value = 'Ingresar'
             return;
         }
 
@@ -53,9 +54,11 @@ export default function Login() {
         if(msg.error){
             console.error(msg.error)
             toast.error(msg.error.detail);
+            (document.getElementById('btnIngresar') as HTMLInputElement).value = 'Ingresar'
             return;
         }
         toast.success('Bienvenido: ' + user);
+        (document.getElementById('btnIngresar') as HTMLInputElement).value = 'Ingresar'
         navigate('/colectas/categorias');
     }
   return (
@@ -75,7 +78,7 @@ export default function Login() {
                     </div>
                     <br />
                     <div ref={recaptcharef} className='mb-3'></div>
-                <input type="submit" value="Ingresar" className="btn btn-primary full-width w-100"/>
+                <input type="submit" value="Ingresar" className="btn btn-primary full-width w-100" id='btnIngresar'/>
             </form>
             <br />
             <hr />

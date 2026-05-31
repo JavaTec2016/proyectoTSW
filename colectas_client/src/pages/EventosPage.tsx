@@ -132,6 +132,7 @@ const customValidationSchema: CustomValidatorSchema = {
         'lesser_than_fecha_inicio': (data)=>{
             const fin = Date.parse(data['fecha_fin']);
             const inicio = Date.parse(data['fecha_inicio'])
+            console.log(fin < inicio)
             if(fin < inicio) return 'La fecha de fin no puede ser antes de la fecha de inicio'
         }
     }
