@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, type RegisterOptions } from 'react-hook-form';
 import { clearPrefix, customValidate, inputName, limpiar, type CustomValidatorResults, type CustomValidatorSchema } from './FormActions';
 import { Form } from 'react-bootstrap';
@@ -26,6 +26,7 @@ export type FormComponentAttributes = {
     validators: FormValidators;
     body: FormRows;
     customValidatorSchema?: CustomValidatorSchema,
+    closeButton?: React.ReactNode
 }
 function FormComponent({
     id,
@@ -35,6 +36,7 @@ function FormComponent({
     hidden = false,
     onchange = () => { },
     onClose,
+    closeButton,
     validators,
     customValidatorSchema = {},
     body,
@@ -68,12 +70,13 @@ function FormComponent({
     }, [values]);
     return (
         <Form onSubmit={submit} hidden={hidden} className="form-panel" id={id}>
-            <div className="panel-header justify-content-between">
-                <div>
+            <div className="panel-header d-flex justify-content-between">
+                <div className='w-50'>
                     <p className="panel-title">{presentation.title || "Informacion de la Coproración"}</p>
                     <p className="panel-subtitle">{presentation.subtitle}</p>
                 </div>
-                {onClose && (
+                {closeButton}
+                {!closeButton && onClose && (
                     <button className='btn-close' type="button" onClick={onClose} aria-label="Close"></button>
                 )}
             </div>
@@ -109,6 +112,8 @@ function FormComponent({
                 className="btn-primary-custom"
                 value="Guardar registro"
             ></input>
+            
+
             <button className="btn-secondary-custom" type='button' role='button' onClick={() => limpiar(id)}>
                 Limpiar campos
             </button>

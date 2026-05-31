@@ -1,8 +1,9 @@
+import ReactDOM from 'react-dom';
 import React, { useEffect, useState } from 'react'
 import type { FormPresentation, FormRows, FormValidators } from './forms/FormComponent';
 import { Tabler, type TablePresentation } from './Tabler';
 import API from '../api/api';
-import { clearPrefix, customValidate, inputName, type CustomValidatorResults, type CustomValidatorSchema } from './forms/FormActions';
+import { clearPrefix, customValidate, inputName, limpiar, type CustomValidatorResults, type CustomValidatorSchema } from './forms/FormActions';
 import toast from 'react-hot-toast';
 import FormComponent from './forms/FormComponent';
 import DetallerPanel, { type DetallerPresentation } from './DetallerPanel';
@@ -42,15 +43,15 @@ export type CrudComponentAttributes = {
     serverErrorMessage: string;
 }
 
-function rebuildValidators(formId:string, validators:FormValidators){
-    const out:FormValidators = {};
-    Object.keys(validators).forEach(field=>{
+function rebuildValidators(formId: string, validators: FormValidators) {
+    const out: FormValidators = {};
+    Object.keys(validators).forEach(field => {
         out[inputName(formId, field)] = validators[field];
     })
     return out;
 }
 
-function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:CrudComponentAttributes, customValidatorSchema?: CustomValidatorSchema}) {
+function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes: CrudComponentAttributes, customValidatorSchema?: CustomValidatorSchema }) {
 
     const [updateValues, setUpdateValues] = useState({});
     const [updateId, setUpdateId] = useState<any>(null);
@@ -66,7 +67,7 @@ function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:Cru
 
     function detalles(id: string) {
         setHideDetail(false);
-        location.href = '#' + 'detalle'
+        location.href = '#' + 'details'
         API.getDetail(attributes.endpoint, id).then(result => {
             if (result.error) {
                 toast.error(result.error.detail)
@@ -135,7 +136,7 @@ function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:Cru
     }
     //===validacion custom
 
-    
+
 
     //===AUTO BUSQUEDA
 
@@ -170,7 +171,27 @@ function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:Cru
     }
 
     ///====EL ACHETEMELE
+    const modal = (
+        <div className='modal fade' id='modalEdit' aria-hidden='true' tabIndex={-1}>
+            <div className='modal-dialog'>
+                <div className="modal-content">
+                    <FormComponent
+                        id={updateFormid}
+                        presentation={attributes.updateFormPresentation}
+                        onSubmit={actualizar}
+                        body={attributes.formRows}
+                        validators={rebuildValidators(updateFormid, attributes.validators)}
+                        values={updateValues}
+                        customValidatorSchema={customValidatorSchema}
+                        closeButton={
+                            <button className='btn-close' data-bs-dismiss="modal" type="button" aria-label="Close"></button>
+                        }
+                    ></FormComponent>
+                </div>
+            </div>
 
+        </div>
+    )
     return (
         <>
             <div className='content-row'>
@@ -195,25 +216,14 @@ function CrudComponent({attributes, customValidatorSchema = {}}: {attributes:Cru
                         onDelete={eliminar}
                         onDetail={detalles}
                         onEdit={setModal}
+                        editButtonAttributes={{ 'data-bs-toggle': 'modal', 'data-bs-target': '#modalEdit' }}
                         headerData={attributes.tablePresentation}
                     ></Tabler>
                 </div>
             </div>
             <br />
-            {/** Hacerlo modal */}
-            <div className='content-row'>
-                <FormComponent
-                    id={updateFormid}
-                    presentation={attributes.updateFormPresentation}
-                    onSubmit={actualizar}
-                    body={attributes.formRows}
-                    validators={rebuildValidators(updateFormid, attributes.validators)}
-                    values={updateValues}
-                    onClose={closeUpdate}
-                    hidden={hideUpdateForm}
-                    customValidatorSchema={customValidatorSchema}
-                ></FormComponent>
-            </div>
+            {/** el modal q tiene q estar en el body o bustrap chilla */}
+            {ReactDOM.createPortal(modal, document.body)}
 
             <hr />
             <DetallerPanel
