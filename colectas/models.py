@@ -10,8 +10,14 @@ class Corporacion(models.Model):
     telefono = models.CharField(max_length=10, null=True)
     email = models.CharField(max_length=50, null=True)
 
+    def __str__(self):
+        return self.nombre
+
 class Clase(models.Model):
     anio_graduacion = models.PositiveSmallIntegerField(unique=True, primary_key=True)
+    
+    def __str__(self):
+        return str(self.anio_graduacion)
 
 class Circulo(models.Model):
     nombre = models.CharField(max_length=40, unique=True)
@@ -19,6 +25,7 @@ class Circulo(models.Model):
 
 class Donador_Categoria(models.Model):
     nombre = models.CharField(max_length=50, unique=True)
+    
     def __str__(self):
         return self.nombre
 
@@ -36,6 +43,9 @@ class Evento(models.Model):
                 name='check_fecha_fin'
             )
         ]
+    
+    def __str__(self):
+        return str(self.nombre)
 
 class Voluntario(models.Model):
     nombre = models.CharField(max_length=100)
@@ -52,12 +62,12 @@ class Donador(models.Model):
     direccion = models.CharField(max_length=200)
     telefono = models.CharField(max_length=10, null=True)
     email = models.CharField(max_length=50, null=True)
-    categoria = models.ForeignKey(Donador_Categoria.__name__, on_delete=models.CASCADE)
-    anio_graduacion = models.PositiveSmallIntegerField(unique=True, primary_key=True)
-    id_clase = models.ForeignKey(Clase.__name__, on_delete=models.CASCADE)
-    id_corporacion = models.ForeignKey(Corporacion.__name__, on_delete=models.CASCADE, related_name="id_corporacion")
+    categoria = models.ForeignKey(Donador_Categoria.__name__, on_delete=models.CASCADE, related_name='id_categoria', db_column='categoria')
+    anio_graduacion = models.PositiveSmallIntegerField(unique=True)
+    id_clase = models.ForeignKey(Clase.__name__, on_delete=models.CASCADE, db_column='id_clase')
+    id_corporacion = models.ForeignKey(Corporacion.__name__, on_delete=models.CASCADE, related_name="id_corporacion", db_column="id_corporacion")
     nombre_conyuge = models.CharField(max_length=201)
-    id_corporacion_conyuge = models.ForeignKey(Corporacion.__name__, on_delete=models.CASCADE, related_name="id_corporacion_conyuge")
+    id_corporacion_conyuge = models.ForeignKey(Corporacion.__name__, on_delete=models.CASCADE, related_name="id_corporacion_conyuge", db_column="id_corporacion_conyuge")
     
 class AsistenciaEvento(models.Model):
     id_evento = models.ForeignKey(Evento.__name__, on_delete=models.CASCADE)

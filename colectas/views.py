@@ -1,15 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
 from rest_framework import request
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
 from rest_framework import status
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -20,8 +13,8 @@ from .models import *
 from .serializer import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.conf import settings
+from rest_framework.decorators import action
 # Create your views here.
 
 class CorporacionView(viewsets.ModelViewSet):
@@ -31,6 +24,12 @@ class CorporacionView(viewsets.ModelViewSet):
     filterset_class = CorporacionFilter
     permission_classes = [IsAuthenticated]
 
+    @action(detail=False, methods=['get'], url_path='display')
+    def display(self, request):
+        queryset = self.get_queryset()
+        serializer = CorporacionDisplaySerializer(queryset, many=True)
+        return Response(serializer.data)
+
 class Donador_CategoriaView(viewsets.ModelViewSet):
     serializer_class = Donador_CategoriaSerializer
     queryset = Donador_Categoria.objects.all()
@@ -38,13 +37,45 @@ class Donador_CategoriaView(viewsets.ModelViewSet):
     filterset_class = Donador_CategoriaFilter
     permission_classes = [IsAuthenticated]
 
-@permission_classes([IsAuthenticated])
+    @action(detail=False, methods=['get'], url_path='display')
+    def display(self, request):
+        queryset = self.get_queryset()
+        serializer = Donador_CategoriaDisplaySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+#@permission_classes([IsAuthenticated])
 class EventoView(viewsets.ModelViewSet):
     serializer_class = EventoSerializer
     queryset = Evento.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = EventoFilter
     permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['get'], url_path='display')
+    def display(self, request):
+        queryset = self.get_queryset()
+        serializer = EventoDisplaySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class DonadorView(viewsets.ModelViewSet):
+    serializer_class = DonadorSerializer
+    queryset = Donador.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DonadorFilter
+    permission_classes = [IsAuthenticated]
+
+class ClaseView(viewsets.ModelViewSet):
+    queryset = Clase.objects.all()
+    serializer_class = ClaseSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ClaseFilter
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=['get'], url_path='display')
+    def display(self, request):
+        queryset = self.get_queryset()
+        serializer = ClaseDisplaySerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class UserioView(viewsets.ModelViewSet):
     serializer_class = UserioSerializer

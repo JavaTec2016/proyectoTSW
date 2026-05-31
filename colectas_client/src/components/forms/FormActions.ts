@@ -1,3 +1,5 @@
+import API from "../../api/api";
+
 export type CustomValidatorSchema = {
   [x:string]:{
     [x:string]:CustomValidator;
@@ -57,4 +59,15 @@ export function customValidate(schema:CustomValidatorSchema, formId:string){
     })
   }
   return failures;
+}
+
+export async function getOptionsOf(categoria:string){
+  const res = API.get(categoria+API.DISPLAY_END, null);
+  if((await res).error) return res;
+  const data = await API.getData(res);
+  const out:{[x:string]:any} = {}
+  data.forEach((row:{[x:string]:any})=>{
+    out[row['key']] = row['display']
+  })
+  return out;
 }

@@ -8,6 +8,8 @@ router = routers.DefaultRouter()
 router.register(r'corporaciones', CorporacionView, 'corporaciones')
 router.register(r'categorias', Donador_CategoriaView, 'categorias')
 router.register(r'eventos', EventoView, 'eventos')
+router.register(r'donadores', DonadorView, 'donadores')
+router.register(r'clases', ClaseView, 'clases')
 router.register(r'usuarios', UserioView, 'usuarios')
 urlpatterns = [
     path("api/v1/", include(router.urls)),

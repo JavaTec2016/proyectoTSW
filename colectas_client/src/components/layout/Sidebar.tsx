@@ -18,7 +18,8 @@ const navItems:SideSection[] = [
     {section: 'Acciones', items:[
         {'to':'/colectas/categorias', label:'Categorias', icon:'si'},
         {'to':'/colectas/corporaciones', label:'Corporaciones', icon:'si'},
-        {'to':'/colectas/eventos', label:'Eventos', icon:'si'}
+        {'to':'/colectas/eventos', label:'Eventos', icon:'si'},
+        {'to':'/colectas/donadores', label:'Donadores', icon:'si'}
     ]}
 ]
 function Sidebar({collapsed, layout=navItems}:{collapsed:boolean, layout?:SideSection[]}) {

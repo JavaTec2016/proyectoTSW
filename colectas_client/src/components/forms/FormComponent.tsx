@@ -51,7 +51,9 @@ function FormComponent({
 
     const submit = handleSubmit((data) => {
         if(!verifyCustomValidation()) return;
+        
         const cleared = clearPrefix(data);
+        console.log(cleared)
         onSubmit(cleared);
     });
 

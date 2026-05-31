@@ -3,7 +3,7 @@ import FormInput from './FormInput';
 import type { ErrorOption, FieldErrors, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form';
 import FormSelectField from './FormSelectField';
 import FormTextArea from './FormTextArea';
-import type { CustomValidatorResults } from './FormActions';
+import { inputName, type CustomValidatorResults } from './FormActions';
 import { printCustomErrors, printErrors } from './printErrors';
 export type FormInputConfig = {
     name: 'input';
@@ -21,10 +21,11 @@ export type FormTextAreaConfig = {
 }
 function FormField({ formId, id, register, errors, validation, customValidation = {}, onChange, config }: { formId: string, id: string, config: FormInputConfig | FormSelectConfig | FormTextAreaConfig, register: UseFormRegister<FieldValues>, errors: FieldErrors<FieldValues>, validation: { [x: string]: RegisterOptions }, customValidation: CustomValidatorResults, onChange: () => any }) {
     function printAllErrors() {
+        const ide = inputName(formId, id);
         return (
             <div>
-                {errors[id] && errors[id]!.types && printErrors(errors[id] as ErrorOption)}
-                {customValidation[id] && printCustomErrors(customValidation[id])}
+                {errors[ide] && errors[ide]!.types && printErrors(errors[ide] as ErrorOption)}
+                {customValidation[ide] && printCustomErrors(customValidation[ide])}
             </div>
         )
     }

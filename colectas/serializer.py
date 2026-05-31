@@ -28,6 +28,70 @@ class EventoSerializer(serializers.ModelSerializer):
         
         return super().validate(attrs)
 
+class DonadorSerializer(serializers.ModelSerializer):
+    categoria_display = serializers.StringRelatedField(source='categoria')
+    id_corporacion_display = serializers.StringRelatedField(source='id_corporacion')
+    id_clase_display = serializers.StringRelatedField(source='id_clase')
+    id_corporacion_conyuge_display = serializers.StringRelatedField(source='id_corporacion_conyuge')
+    class Meta:
+        model = Donador
+        fields = '__all__'
+
+class ClaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Clase
+        fields = '__all__'
+
+#OPTIONS DE SELECTS
+class Donador_CategoriaDisplaySerializer(serializers.ModelSerializer):
+    display = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
+    class Meta:
+        model = Donador_Categoria
+        fields = ['key', 'display']
+    
+    def get_key(self, obj):
+        return obj.id
+    def get_display(self, obj):
+        return f"{obj.id}: {obj.nombre}"
+
+class CorporacionDisplaySerializer(serializers.ModelSerializer):
+    display = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
+    class Meta:
+        model = Corporacion
+        fields = ['key', 'display']
+    
+    def get_key(self, obj):
+        return obj.id
+    def get_display(self, obj):
+        return f"{obj.id}: {obj.nombre}"
+    
+class EventoDisplaySerializer(serializers.ModelSerializer):
+    display = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
+    class Meta:
+        model = Evento
+        fields = ['key', 'display']
+    
+    def get_key(self, obj):
+        return obj.id
+    
+    def get_display(self, obj):
+        return f"{obj.id}: {obj.nombre} - {obj.tipo} ({obj.fecha_inicio} - {obj.fecha_fin})"
+
+class ClaseDisplaySerializer(serializers.ModelSerializer):
+    display = serializers.SerializerMethodField()
+    key = serializers.SerializerMethodField()
+    class Meta:
+        model = Corporacion
+        fields = ['key', 'display']
+    
+    def get_key(self, obj):
+        return obj.anio_graduacion
+    def get_display(self, obj):
+        return f"{obj.anio_graduacion}"
+
 class UserioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Userio

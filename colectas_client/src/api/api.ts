@@ -17,13 +17,19 @@ class API {
     //endpoints
     
     static CATEGORIAS = 'categorias/'
+    static CATEGORIAS_DISPLAY = 'categorias/display/'
     static CORPORACONES = 'corporaciones/'
+    static CORPORACONES_DISPLAY = 'corporaciones/display/'
     static EVENTOS = 'eventos/'
-
+    static DONADORES = 'donadores/'
+    static CLASES = 'clases/'
+    static DONADORES_DISPLAY = 'donadores/display/'
     static REGISTRAR = 'auth/registrar/'
     static LOGIN = 'auth/login/'
     static LOGOUT = 'auth/logout/'
     static REFRESH = 'auth/refresh/'
+
+    static DISPLAY_END = 'display/'
 
     static endpoints = new Set<string>()
     static auth = true;
@@ -34,7 +40,12 @@ class API {
         .add(this.CATEGORIAS)
         .add(this.CORPORACONES)
         .add(this.EVENTOS)
+        .add(this.DONADORES)
+        .add(this.CLASES)
 
+        .add(this.CATEGORIAS_DISPLAY)
+        .add(this.CORPORACONES_DISPLAY)
+        .add(this.CLASES+this.DISPLAY_END)
         .add(this.LOGIN)
         .add(this.LOGOUT)
         .add(this.REFRESH)
