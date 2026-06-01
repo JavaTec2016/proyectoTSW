@@ -59,7 +59,7 @@ export default function Login() {
         }
         toast.success('Bienvenido: ' + user);
         (document.getElementById('btnIngresar') as HTMLInputElement).value = 'Ingresar'
-        navigate('/colectas/categorias');
+        navigate('/colectas');
     }
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">

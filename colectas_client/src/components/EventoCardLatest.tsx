@@ -12,17 +12,18 @@ export type EventoCardLatestAttribs = {
     style:React.CSSProperties;
     imgPath:string;
     imgAlt:string;
+    onclick?:()=>any;
 }
-function EventoCardLatest({info, style, imgPath, imgAlt}:EventoCardLatestAttribs) {
+function EventoCardLatest({info, style, imgPath, imgAlt, onclick}:EventoCardLatestAttribs) {
   return (
-    <div className='card' style={style}>
-            <img src={imgPath} className='card-image-top' alt={imgAlt} />
+    <div className='card' style={style} onClick={onclick}>
+            <img src={imgPath} className='card-img-top' alt={imgAlt} />
             <div className="badges pb-3">
-                <span className="badge bg-outline-info">{info.tipo}</span>
+                <span className="badge text-bg-info">{info.tipo}</span>
             </div>
-            <div className="card-body">
-                <h5 className="card-title">{info.nombre}</h5>
-                <h5 className="card-subtitle">{info.fecha_inicio} - {info.fecha_fin}</h5>
+            <div className="card-body  d-flex flex-column">
+                <h5 className="card-text">{info.nombre}</h5>
+                <h6 className="card-subtitle text-muted mb-2">{info.fecha_inicio} - {info.fecha_fin}</h6>
                 <p className="card-text">
                     {info.descripcion.length > 100 ? (info.descripcion.substring(0,100)+'...') : info.descripcion}
                 </p>

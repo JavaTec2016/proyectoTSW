@@ -12,7 +12,7 @@ const labels = {
     username:"Usuario",
     password:"Contraseña",
     rol:"Rol",
-    is_active: 'Conectado'
+    is_active: 'Habilitado'
 }
 const formConfig: FormRows = [
     [
