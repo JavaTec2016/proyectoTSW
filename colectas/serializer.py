@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db import IntegrityError
 from .models import *
 class CorporacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,6 +92,19 @@ class ClaseDisplaySerializer(serializers.ModelSerializer):
         return obj.anio_graduacion
     def get_display(self, obj):
         return f"{obj.anio_graduacion}"
+    
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError as e:
+            self._handle_integrity_error(e)
+
+    def _handle_integrity_error(self, e: IntegrityError):
+        error = str(e).lower()
+        if 'unique' in error:
+            raise serializers.ValidationError({
+                error:{'detail':'Esta clase ya existe'}
+            })
 
 class UserioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -98,15 +112,33 @@ class UserioSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def create(self, validated_data):
-        usr = Userio.objects.create_user(**validated_data)
-        validated_data['rol'] = 'admin'
-        if 'rol' in validated_data and validated_data['rol'] == 'admin': usr.is_staff = True
-        return usr
+        try:
+            usr = Userio.objects.create_user(**validated_data)
+            validated_data['rol'] = 'admin'
+            if 'rol' in validated_data and validated_data['rol'] == 'admin': usr.is_staff = True
+            return usr
+        
+        except IntegrityError as e:
+            self._handle_integrity_error(e)
+
+    def _handle_integrity_error(self, e: IntegrityError):
+        error = str(e).lower()
+        if 'unique' in error:
+            raise serializers.ValidationError({
+                error:{'detail':'Este usuario ya existe'}
+            })
     
     def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
         usr:Userio = super().update(instance, validated_data)
+
+        #cifrao
+        if password:
+            usr.set_password(password)
+
         if 'rol' in validated_data and validated_data['rol'] == 'admin': usr.is_staff = True
         else: usr.is_staff = False
+        usr.save()
         return usr
 
 class RegisterSerializer(serializers.ModelSerializer):

@@ -31,7 +31,7 @@ const formConfig: FormRows = [
             config:{
                 name:'input',
                 type:'text',
-                label:labels['username']
+                label:labels['password']
             }
         }
     ],
@@ -71,12 +71,12 @@ const crudAttributes: CrudComponentAttributes = {
         },
     },
     labelSchema: labels,
-    detailLayout: [['id', 'nombre'], ['rol'], ['is_active']],
+    detailLayout: [['id', 'username'], ['rol'], ['is_active']],
     detailPresentation: {
         title: 'Detalles del Usuario',
         subtitle: 'Informacion'
     },
-    tableColumns: ['usuario', 'rol', 'is_active'],
+    tableColumns: ['username', 'rol', 'is_active'],
     primaryKey: 'id',
     tablePresentation: {
         title: 'Usuario',

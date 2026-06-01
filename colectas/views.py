@@ -85,6 +85,9 @@ class UserioView(viewsets.ModelViewSet):
     filterset_class = UserioFilter
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
 #==========AUTENTICACION
 
 # Register
