@@ -3,17 +3,19 @@ import type { data } from "react-router-dom"
 type paramsObject = {
     [k in string]: string | number | null
 }
-type APIErrorResponse = {}
-type APIResponse = Promise<{[x:string]:any, data?:any, headers:Headers, error?:{detail:string, code:string}, status?:number|200}>;
+export type APIErrorResponse = {[x:string]:string[] | string, detail:string, code:string}
+export type APIResponse = Promise<{[x:string]:any, data?:any, headers:Headers, error?:APIErrorResponse, status?:number|200}>;
 class API {
 
     //direccion
     static __local = 'http://192.168.1.8:8000'
     static __prod = 'https://proyectotsw.onrender.com'
-    static ROOT = this.__prod;
+    static ROOT = this.__local;
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     
+    //errores sql
+    static ERROR_UNIQUE = 'error_unique'
     //endpoints
     
     static CATEGORIAS = 'categorias/'

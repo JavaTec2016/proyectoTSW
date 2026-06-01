@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from django.db import IntegrityError
 from .models import *
 class CorporacionSerializer(serializers.ModelSerializer):
@@ -42,6 +43,13 @@ class ClaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clase
         fields = '__all__'
+
+    def __init__(self, instance=None, data=..., **kwargs):
+        super().__init__(instance, data, **kwargs)
+        for field_name, field in self.fields.items():
+            for validator in field.validators:
+                if isinstance(validator, UniqueValidator):
+                    validator.message = f'Ya existe un registro con ese {field_name}.'
 
 #OPTIONS DE SELECTS
 class Donador_CategoriaDisplaySerializer(serializers.ModelSerializer):
@@ -93,18 +101,7 @@ class ClaseDisplaySerializer(serializers.ModelSerializer):
     def get_display(self, obj):
         return f"{obj.anio_graduacion}"
     
-    def create(self, validated_data):
-        try:
-            return super().create(validated_data)
-        except IntegrityError as e:
-            self._handle_integrity_error(e)
-
-    def _handle_integrity_error(self, e: IntegrityError):
-        error = str(e).lower()
-        if 'unique' in error:
-            raise serializers.ValidationError({
-                error:{'detail':'Esta clase ya existe'}
-            })
+    
 
 class UserioSerializer(serializers.ModelSerializer):
     class Meta:

@@ -71,3 +71,18 @@ export async function getOptionsOf(categoria:string){
   })
   return out;
 }
+
+export function genericSqlErrors(code:string, fieldLabel?:string){
+    let uniqueLabel = `Ya hay un registro con el mismo valor en: ${fieldLabel}`
+    switch(code){
+      case API.ERROR_UNIQUE: return fieldLabel ? uniqueLabel : 'Este registro  ya existe';
+    }
+    return 'Error: ' + code;
+}
+
+export function forEachFault(errorCodes:{[x:string]:string[] | string}, callback:(field:string, error:string)=>any){
+  for(const field in errorCodes){
+    if(errorCodes[field] instanceof String) callback(field, errorCodes[field] as string)
+    else (errorCodes[field] as string[]).forEach(code=>callback(field, code))
+  }
+}

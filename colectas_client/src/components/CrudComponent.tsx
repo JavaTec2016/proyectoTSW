@@ -2,8 +2,8 @@ import ReactDOM from 'react-dom';
 import React, { useEffect, useState } from 'react'
 import type { FormPresentation, FormRows, FormValidators } from './forms/FormComponent';
 import { Tabler, type TablePresentation } from './Tabler';
-import API from '../api/api';
-import { clearPrefix, customValidate, inputName, limpiar, type CustomValidatorResults, type CustomValidatorSchema } from './forms/FormActions';
+import API, { type APIErrorResponse, type APIResponse } from '../api/api';
+import { clearPrefix, customValidate, forEachFault, genericSqlErrors, inputName, limpiar, type CustomValidatorResults, type CustomValidatorSchema } from './forms/FormActions';
 import toast from 'react-hot-toast';
 import FormComponent from './forms/FormComponent';
 import DetallerPanel, { type DetallerPresentation } from './DetallerPanel';
@@ -63,6 +63,20 @@ function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes:
     const [collapseSide, setCollapseSide] = useState(true);
     const createFormId = 'createform';
     const updateFormid = 'updateForm';
+
+    function handleResponseError(msg: Awaited<APIResponse>) {
+        if (msg.status == 400) {
+            let errs: string[] = [];
+            forEachFault(msg.error!, (field, error) => {
+                errs.push(genericSqlErrors(error, attributes.labelSchema[field]))
+            })
+            toast.error(errs[0]);
+            return;
+        }
+        toast.error(msg.error!.detail || crudDefaults.error);
+        return;
+    }
+
     //========CRUD
 
     function detalles(id: string) {
@@ -79,8 +93,8 @@ function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes:
     function setModal(id: string) {
         API.getDetail(attributes.endpoint, id).then(result => {
             if (result.error) {
-                toast.error(attributes.serverErrorMessage);
-                console.error(result.error.detail);
+                handleResponseError(result);
+                console.error(result.error);
                 return;
             }
             setUpdateValues(result.data);
@@ -92,8 +106,8 @@ function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes:
         confirm(attributes.deleteMessages.confirmation) ?
             API.delete(attributes.endpoint, id).then((res) => {
                 if (res && res.error) {
-                    toast.error(res.error.detail || crudDefaults.error);
-                    console.error(res.error.detail);
+                    handleResponseError(res);
+                    console.error(res.error);
                 }
                 else {
                     toast.success(attributes.deleteMessages.success || crudDefaults.success)
@@ -104,7 +118,7 @@ function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes:
     function agregar(data: { [x: string]: any }) {
         API.post(attributes.endpoint, data).then(msg => {
             if (msg.error) {
-                toast.error(msg.error.detail || crudDefaults.error);
+                handleResponseError(msg)
                 console.error(msg.error);
                 return;
             }
@@ -117,7 +131,7 @@ function CrudComponent({ attributes, customValidatorSchema = {} }: { attributes:
         if (updateId == null) return;
         API.update(attributes.endpoint, updateId, data).then(msg => {
             if (msg.error) {
-                toast.error(msg.error.detail || crudDefaults.error);
+                handleResponseError(msg)
                 console.error(msg.error);
                 return;
             }
