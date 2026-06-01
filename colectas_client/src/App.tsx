@@ -15,12 +15,14 @@ import Dashboard from './pages/Dashboard';
 import DonadoresPage from './pages/DonadoresPage';
 import ClasesPage from './pages/ClasesPage';
 import UsuariosPage from './pages/UsuariosPage';
+import ColectasPage from './pages/ColectasPage';
 const router = createBrowserRouter([
   //rutas token
   {
     path:'/colectas',
     element: <ProtectedRoute />,
     children:[
+      {path:'', element:<ColectasPage />},
       {path:'categorias', element:<Donador_CategoriasPage />},
       {path:'corporaciones', element:<CorporacionesPage />},
       {path:'eventos', element:<EventosPage />},

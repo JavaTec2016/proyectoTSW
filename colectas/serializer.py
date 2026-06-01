@@ -39,6 +39,11 @@ class DonadorSerializer(serializers.ModelSerializer):
         model = Donador
         fields = '__all__'
 
+class EventoDashboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = '__all__'
+
 class ClaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clase

@@ -47,7 +47,7 @@ class Donador_CategoriaView(viewsets.ModelViewSet):
 #@permission_classes([IsAuthenticated])
 class EventoView(viewsets.ModelViewSet):
     serializer_class = EventoSerializer
-    queryset = Evento.objects.all()
+    queryset = Evento.objects.all().order_by('-fecha_inicio')
     filter_backends = [DjangoFilterBackend]
     filterset_class = EventoFilter
     permission_classes = [IsAuthenticated]
@@ -56,6 +56,12 @@ class EventoView(viewsets.ModelViewSet):
     def display(self, request):
         queryset = self.get_queryset()
         serializer = EventoDisplaySerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='latest')
+    def latest(self, request):
+        queryset = self.filter_queryset( Evento.objects.order_by('-fecha_inicio') )[:10]
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
 class DonadorView(viewsets.ModelViewSet):

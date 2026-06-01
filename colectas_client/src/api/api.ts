@@ -10,7 +10,7 @@ class API {
     //direccion
     static __local = 'http://192.168.1.8:8000'
     static __prod = 'https://proyectotsw.onrender.com'
-    static ROOT = this.__local;
+    static ROOT = this.__prod;
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     
@@ -33,7 +33,7 @@ class API {
     static REFRESH = 'auth/refresh/'
 
     static DISPLAY_END = 'display/'
-
+    static LATEST_END = 'latest/'
     static endpoints = new Set<string>()
     static auth = true;
      static accessToken:string | null = '';
@@ -43,6 +43,7 @@ class API {
         .add(this.CATEGORIAS)
         .add(this.CORPORACONES)
         .add(this.EVENTOS)
+        .add(this.EVENTOS+this.LATEST_END)
         .add(this.DONADORES)
         .add(this.CLASES)
         .add(this.USUARIOS)
