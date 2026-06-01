@@ -72,8 +72,9 @@ class DonadorView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 class ClaseView(viewsets.ModelViewSet):
-    queryset = Clase.objects.all()
     serializer_class = ClaseSerializer
+    queryset = Clase.objects.all()
+    
     filter_backends = [DjangoFilterBackend]
     filterset_class = ClaseFilter
     permission_classes = [AllowAny]
@@ -82,6 +83,7 @@ class ClaseView(viewsets.ModelViewSet):
     def display(self, request):
         queryset = self.get_queryset()
         serializer = ClaseDisplaySerializer(queryset, many=True)
+        serializer.is_valid()
         return Response(serializer.data)
 
 class UserioView(viewsets.ModelViewSet):

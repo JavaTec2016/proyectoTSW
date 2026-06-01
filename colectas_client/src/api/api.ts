@@ -8,9 +8,9 @@ export type APIResponse = Promise<{[x:string]:any, data?:any, headers:Headers, e
 class API {
 
     //direccion
-    static __local = 'http://192.168.1.8:8000'
+    static __local = 'http://localhost:8000'
     static __prod = 'https://proyectotsw.onrender.com'
-    static ROOT = this.__prod;
+    static ROOT = this.__local;
     static API_URL = '/colectas/api/'
     static API_VERSION = 'v1/'
     

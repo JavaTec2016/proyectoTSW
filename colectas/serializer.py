@@ -49,8 +49,8 @@ class ClaseSerializer(serializers.ModelSerializer):
         model = Clase
         fields = '__all__'
 
-    def __init__(self, instance=None, data=..., **kwargs):
-        super().__init__(instance, data, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             for validator in field.validators:
                 if isinstance(validator, UniqueValidator):
