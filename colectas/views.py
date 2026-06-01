@@ -83,7 +83,6 @@ class ClaseView(viewsets.ModelViewSet):
     def display(self, request):
         queryset = self.get_queryset()
         serializer = ClaseDisplaySerializer(queryset, many=True)
-        serializer.is_valid()
         return Response(serializer.data)
 
 class UserioView(viewsets.ModelViewSet):
